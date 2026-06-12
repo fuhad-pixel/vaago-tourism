@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Poppins', Arial, sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #33313b;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 3rem 2.5rem;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 24px 36px -11px rgba(0,0,0,0.09);
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.login-header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #040e26;
+}
+
+.login-header h1 span {
+    color: #f15d30;
+}
+
+.login-header p {
+    margin-top: 0.5rem;
+    font-size: 14px;
+    color: #888;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #000;
+    text-transform: uppercase;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 15px;
+    background: transparent;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 4px;
+    color: #333;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #f15d30;
+    box-shadow: 0 0 0 3px rgba(241, 93, 48, 0.1);
+}
+
+.form-control::placeholder {
+    color: rgba(0,0,0,0.4);
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background: #f15d30;
+    border: 1px solid #f15d30;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0px 24px 36px -11px rgba(0,0,0,0.09);
+}
+
+.btn-primary:hover {
+    background: transparent;
+    color: #f15d30;
+}
+
+.invalid-feedback {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 13px;
+    color: #e3342f;
+}
+
+.alert-error {
+    background: #fcebeb;
+    border: 1px solid #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    font-size: 14px;
+}
