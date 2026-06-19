@@ -4,6 +4,16 @@ document.addEventListener("DOMContentLoaded", function() {
     if (sidebarToggle) {
         sidebarToggle.addEventListener('click', function() {
             document.body.classList.toggle('sidebar-collapsed');
+            
+            // Dispatch resize event multiple times during the transition to ensure charts resize smoothly
+            let resizeInterval = setInterval(() => {
+                window.dispatchEvent(new Event('resize'));
+            }, 30);
+            
+            setTimeout(() => {
+                clearInterval(resizeInterval);
+                window.dispatchEvent(new Event('resize'));
+            }, 350); // Sidebar transition is 0.3s (300ms)
         });
     }
 
@@ -74,37 +84,50 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // KPI 2 - Teal
-    var spark2 = new ApexCharts(document.querySelector("#spark2"), {
-        ...sparklineOptions,
-        colors: ['#00B8A9'],
-        series: [{ data: [12, 14, 2, 47, 42, 15, 47, 75, 65, 19, 14] }]
-    });
-    spark2.render();
+    const spark2El = document.querySelector("#spark2");
+    if (spark2El) {
+        var spark2 = new ApexCharts(spark2El, {
+            ...sparklineOptions,
+            colors: ['#00B8A9'],
+            series: [{ data: [12, 14, 2, 47, 42, 15, 47, 75, 65, 19, 14] }]
+        });
+        spark2.render();
+    }
 
     // KPI 3 - Blue
-    var spark3 = new ApexCharts(document.querySelector("#spark3"), {
-        ...sparklineOptions,
-        colors: ['#2D8CFF'],
-        series: [{ data: [47, 45, 74, 14, 56, 74, 14, 11, 7, 39, 82] }]
-    });
-    spark3.render();
+    const spark3El = document.querySelector("#spark3");
+    if (spark3El) {
+        var spark3 = new ApexCharts(spark3El, {
+            ...sparklineOptions,
+            colors: ['#2D8CFF'],
+            series: [{ data: [47, 45, 74, 14, 56, 74, 14, 11, 7, 39, 82] }]
+        });
+        spark3.render();
+    }
 
     // KPI 4 - Purple
-    var spark4 = new ApexCharts(document.querySelector("#spark4"), {
-        ...sparklineOptions,
-        colors: ['#A855F7'],
-        series: [{ data: [15, 75, 47, 65, 14, 2, 41, 54, 4, 27, 15] }]
-    });
-    spark4.render();
+    const spark4El = document.querySelector("#spark4");
+    if (spark4El) {
+        var spark4 = new ApexCharts(spark4El, {
+            ...sparklineOptions,
+            colors: ['#A855F7'],
+            series: [{ data: [15, 75, 47, 65, 14, 2, 41, 54, 4, 27, 15] }]
+        });
+        spark4.render();
+    }
 
 
-    // Main Revenue Chart
+    // Main Enquiries Chart
     const revenueEl = document.querySelector("#revenueChart");
     if (revenueEl) {
+        const chartData = window.dashboardChartData || {
+            months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            enquiries: [0, 0, 0, 0, 0, 0]
+        };
         var revenueOptions = {
             series: [{
-                name: 'Revenue',
-                data: [31000, 40000, 28000, 51000, 42000, 109000, 100000]
+                name: 'Enquiries',
+                data: chartData.enquiries
             }],
             chart: {
                 height: 300,
@@ -125,14 +148,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             },
             xaxis: {
-                categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                categories: chartData.months,
                 axisBorder: { show: false },
                 axisTicks: { show: false }
             },
             yaxis: {
                 labels: {
                     formatter: function (value) {
-                        return "$" + (value / 1000) + "k";
+                        return Math.round(value);
                     }
                 }
             },
@@ -150,15 +173,19 @@ document.addEventListener("DOMContentLoaded", function() {
     // Travel Categories Donut
     const categoryEl = document.querySelector("#categoryChart");
     if (categoryEl) {
+        const catData = window.dashboardChartData || {
+            categoryNames: ['Luxury', 'Adventure', 'Family', 'Honeymoon', 'Business'],
+            categoryCounts: [0, 0, 0, 0, 0]
+        };
         var categoryOptions = {
-            series: [44, 55, 41, 17, 15],
-            labels: ['Luxury', 'Adventure', 'Family', 'Honeymoon', 'Business'],
+            series: catData.categoryCounts,
+            labels: catData.categoryNames,
             chart: {
                 type: 'donut',
                 height: 300,
                 fontFamily: 'Plus Jakarta Sans, sans-serif'
             },
-            colors: ['#F15A29', '#00B8A9', '#2D8CFF', '#A855F7', '#F59E0B'],
+            colors: ['#F15A29', '#00B8A9', '#2D8CFF', '#A855F7', '#F59E0B', '#EF4444', '#10B981', '#6366F1', '#EC4899', '#14B8A6', '#8B5CF6'],
             plotOptions: {
                 pie: {
                     donut: {
@@ -170,8 +197,13 @@ document.addEventListener("DOMContentLoaded", function() {
                             total: {
                                 show: true,
                                 showAlways: true,
-                                label: 'Total',
-                                color: '#111827'
+                                label: 'Total Tours',
+                                color: '#111827',
+                                formatter: function (w) {
+                                    return w.globals.seriesTotals.reduce(function (a, b) {
+                                        return a + b;
+                                    }, 0);
+                                }
                             }
                         }
                     }

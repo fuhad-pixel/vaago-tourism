@@ -22,7 +22,7 @@
             @method('PUT')
             
             <div class="form-section-grid">
-                <!-- Left Side: Basic Info & Pricing -->
+                <!-- Left Side: Basic Info, Pricing, Additional Inclusions, Related Tours, Itineraries -->
                 <div>
                     <h4 class="form-section-title"><i class="fa-solid fa-circle-info"></i> Basic Information</h4>
                     
@@ -53,6 +53,131 @@
                         <textarea name="exclusions" id="exclusions" class="modern-input ckeditor-init" rows="5">{{ old('exclusions', $tour->exclusions) }}</textarea>
                     </div>
 
+
+
+                    <h4 class="form-section-title" style="margin-top: 24px;"><i class="fa-solid fa-folder-plus"></i> Additional Inclusions</h4>
+                    <div class="form-group multi-select-container">
+                        <label for="additional_inclusions">Select Additional Inclusions</label>
+                        @php
+                            $selectedInclusions = old('additional_inclusions', $tour->additional_inclusions ?? []);
+                        @endphp
+                        <select name="additional_inclusions[]" id="additional_inclusions" class="modern-input select2-init" multiple>
+                            @foreach($additionalInclusions as $inclusion)
+                                <option value="{{ $inclusion->id }}" {{ (is_array($selectedInclusions) && in_array($inclusion->id, $selectedInclusions)) ? 'selected' : '' }}>
+                                    {{ $inclusion->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
+                    </div>
+
+                    <h4 class="form-section-title" style="margin-top: 24px;"><i class="fa-solid fa-earth-americas"></i> Destinations</h4>
+                    <div class="form-group multi-select-container">
+                        <label for="destination_id">Select Destinations <span class="text-danger">*</span></label>
+                        @php
+                            $selectedDestinations = old('destination_id', $tour->destination_id ?? []);
+                        @endphp
+                        <select name="destination_id[]" id="destination_id" class="modern-input select2-init" multiple required>
+                            @foreach($destinations as $destination)
+                                <option value="{{ $destination->id }}" {{ (is_array($selectedDestinations) && in_array($destination->id, $selectedDestinations)) ? 'selected' : '' }}>
+                                    {{ $destination->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
+                    </div>
+
+                    <h4 class="form-section-title" style="margin-top: 24px;"><i class="fa-solid fa-link"></i> Related Tours</h4>
+                    <div class="form-group multi-select-container">
+                        <label for="related_tours">Select Related Tours</label>
+                        @php
+                            $selectedRelatedTours = old('related_tours', $tour->related_tours ?? []);
+                        @endphp
+                        <select name="related_tours[]" id="related_tours" class="modern-input select2-init" multiple>
+                            @foreach($allTours as $t)
+                                <option value="{{ $t->id }}" {{ (is_array($selectedRelatedTours) && in_array($t->id, $selectedRelatedTours)) ? 'selected' : '' }}>
+                                    {{ $t->name }} ({{ $t->tour_code }})
+                                </option>
+                            @endforeach
+                        </select>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
+                    </div>
+
+                    <h4 class="form-section-title" style="margin-top: 24px;"><i class="fa-solid fa-map-location-dot"></i> Itineraries</h4>
+                    <div id="itineraries-container">
+                        @php
+                            $itineraries = old('itineraries', $tour->itineraries->toArray());
+                        @endphp
+                        @if($itineraries)
+                            @foreach($itineraries as $index => $itinerary)
+                            <div class="repeater-block itinerary-block">
+                                <div class="repeater-header">
+                                    <i class="fa-solid fa-calendar-day"></i> Day <span class="day-number">{{ $index + 1 }}</span>
+                                </div>
+                                <div class="btn-remove" title="Remove Itinerary"><i class="fa-solid fa-trash-can"></i></div>
+                                <div class="form-group">
+                                    <label>Title <span class="text-danger">*</span></label>
+                                    <input type="text" name="itineraries[{{ $index }}][title]" class="modern-input required-itinerary-title" placeholder="Enter title" value="{{ $itinerary['title'] }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea name="itineraries[{{ $index }}][description]" class="modern-input ckeditor-init" rows="5">{{ $itinerary['description'] ?? '' }}</textarea>
+                                </div>
+                            </div>
+                            @endforeach
+                        @endif
+                    </div>
+                    <button id="btn-add-itinerary" class="btn-add-repeater" type="button"><i class="fa-solid fa-plus"></i> Add Itinerary Day</button>
+                    @error('itineraries.*.title')<span class="error-message text-danger" style="font-size: 0.85rem; margin-top: 4px; display: block;">{{ $message }}</span>@enderror
+                </div>
+
+                <!-- Right Side: Categorization, FAQs, Images, Duration, Guest Capacity -->
+                <div>
+                    <h4 class="form-section-title"><i class="fa-solid fa-list"></i> Categorization</h4>
+                    <div class="form-group">
+                        <label for="category_id">Category <span class="text-danger">*</span></label>
+                        <select name="category_id" id="category_id" class="modern-input select2-init" required>
+                            <option value="">Select Category</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ old('category_id', $tour->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <h4 class="form-section-title" style="margin-top: 24px;"><i class="fa-solid fa-circle-question"></i> Global FAQs</h4>
+                    <div class="form-group multi-select-container">
+                        <label for="faqs">Select FAQs</label>
+                        @php
+                            $selectedFaqs = old('faqs', $tour->faqs->pluck('id')->toArray());
+                        @endphp
+                        <select name="faqs[]" id="faqs" class="modern-input select2-init" multiple>
+                            @foreach($faqs as $faq)
+                                <option value="{{ $faq->id }}" {{ (is_array($selectedFaqs) && in_array($faq->id, $selectedFaqs)) ? 'selected' : '' }}>
+                                    {{ $faq->question }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
+                    </div>
+
+                    <h4 class="form-section-title" style="margin-top: 24px;"><i class="fa-solid fa-tags"></i> Pricing</h4>
+                    <div class="form-group">
+                        <label for="original_price">Original Price ($) <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" name="original_price" id="original_price" class="modern-input" value="{{ old('original_price', $tour->original_price) }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="discount_price">Discount Price ($)</label>
+                        <input type="number" step="0.01" name="discount_price" id="discount_price" class="modern-input" value="{{ old('discount_price', $tour->discount_price) }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="price_type">Price Type <span class="text-danger">*</span></label>
+                        <select name="price_type" id="price_type" class="modern-input select2-init" required>
+                            <option value="per_person" {{ old('price_type', $tour->price_type) == 'per_person' ? 'selected' : '' }}>Per Person</option>
+                            <option value="per_vehicle" {{ old('price_type', $tour->price_type) == 'per_vehicle' ? 'selected' : '' }}>Per Vehicle</option>
+                            <option value="per_group" {{ old('price_type', $tour->price_type) == 'per_group' ? 'selected' : '' }}>Per Group</option>
+                        </select>
+                    </div>
+
                     <h4 class="form-section-title" style="margin-top: 24px;"><i class="fa-solid fa-images"></i> Tour Images</h4>
                     <div class="form-group">
                         <label>Upload New Images</label>
@@ -76,24 +201,6 @@
                                 @endforeach
                             </div>
                         @endif
-                    </div>
-
-                    <h4 class="form-section-title" style="margin-top: 24px;"><i class="fa-solid fa-tags"></i> Pricing</h4>
-                    <div class="form-group">
-                        <label for="original_price">Original Price ($) <span class="text-danger">*</span></label>
-                        <input type="number" step="0.01" name="original_price" id="original_price" class="modern-input" value="{{ old('original_price', $tour->original_price) }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="discount_price">Discount Price ($)</label>
-                        <input type="number" step="0.01" name="discount_price" id="discount_price" class="modern-input" value="{{ old('discount_price', $tour->discount_price) }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="price_type">Price Type <span class="text-danger">*</span></label>
-                        <select name="price_type" id="price_type" class="modern-input select2-init" required>
-                            <option value="per_person" {{ old('price_type', $tour->price_type) == 'per_person' ? 'selected' : '' }}>Per Person</option>
-                            <option value="per_vehicle" {{ old('price_type', $tour->price_type) == 'per_vehicle' ? 'selected' : '' }}>Per Vehicle</option>
-                            <option value="per_group" {{ old('price_type', $tour->price_type) == 'per_group' ? 'selected' : '' }}>Per Group</option>
-                        </select>
                     </div>
 
                     <h4 class="form-section-title" style="margin-top: 24px;"><i class="fa-solid fa-clock"></i> Tour Duration</h4>
@@ -139,89 +246,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Right Side: Relations, FAQs, Itineraries -->
-                <div>
-                    <h4 class="form-section-title"><i class="fa-solid fa-list"></i> Categorization</h4>
-                    <div class="form-group">
-                        <label for="category_id">Category <span class="text-danger">*</span></label>
-                        <select name="category_id" id="category_id" class="modern-input select2-init" required>
-                            <option value="">Select Category</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{ old('category_id', $tour->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="destination_id">Destination <span class="text-danger">*</span></label>
-                        <select name="destination_id" id="destination_id" class="modern-input select2-init" required>
-                            <option value="">Select Destination</option>
-                            @foreach($destinations as $destination)
-                                <option value="{{ $destination->id }}" {{ old('destination_id', $tour->destination_id) == $destination->id ? 'selected' : '' }}>{{ $destination->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <h4 class="form-section-title" style="margin-top: 24px;"><i class="fa-solid fa-circle-question"></i> Global FAQs</h4>
-                    <div class="form-group multi-select-container">
-                        <label for="faqs">Select FAQs</label>
-                        @php
-                            $selectedFaqs = old('faqs', $tour->faqs->pluck('id')->toArray());
-                        @endphp
-                        <select name="faqs[]" id="faqs" class="modern-input select2-init" multiple>
-                            @foreach($faqs as $faq)
-                                <option value="{{ $faq->id }}" {{ (is_array($selectedFaqs) && in_array($faq->id, $selectedFaqs)) ? 'selected' : '' }}>
-                                    {{ $faq->question }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
-                    </div>
-
-                    <h4 class="form-section-title" style="margin-top: 24px;"><i class="fa-solid fa-folder-plus"></i> Additional Inclusions</h4>
-                    <div class="form-group multi-select-container">
-                        <label for="additional_inclusions">Select Additional Inclusions</label>
-                        @php
-                            $selectedInclusions = old('additional_inclusions', $tour->additional_inclusions ?? []);
-                        @endphp
-                        <select name="additional_inclusions[]" id="additional_inclusions" class="modern-input select2-init" multiple>
-                            @foreach($additionalInclusions as $inclusion)
-                                <option value="{{ $inclusion->id }}" {{ (is_array($selectedInclusions) && in_array($inclusion->id, $selectedInclusions)) ? 'selected' : '' }}>
-                                    {{ $inclusion->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
-                    </div>
-
-                    <h4 class="form-section-title" style="margin-top: 24px;"><i class="fa-solid fa-map-location-dot"></i> Itineraries</h4>
-                    <div id="itineraries-container">
-                        @php
-                            $itineraries = old('itineraries', $tour->itineraries->toArray());
-                        @endphp
-                        @if($itineraries)
-                            @foreach($itineraries as $index => $itinerary)
-                            <div class="repeater-block itinerary-block">
-                                <div class="repeater-header">
-                                    <i class="fa-solid fa-calendar-day"></i> Day <span class="day-number">{{ $index + 1 }}</span>
-                                </div>
-                                <div class="btn-remove" title="Remove Itinerary"><i class="fa-solid fa-trash-can"></i></div>
-                                <div class="form-group">
-                                    <label>Title <span class="text-danger">*</span></label>
-                                    <input type="text" name="itineraries[{{ $index }}][title]" class="modern-input required-itinerary-title" placeholder="Enter title" value="{{ $itinerary['title'] }}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Description</label>
-                                    <textarea name="itineraries[{{ $index }}][description]" class="modern-input ckeditor-init" rows="5">{{ $itinerary['description'] ?? '' }}</textarea>
-                                </div>
-                            </div>
-                            @endforeach
-                        @endif
-                    </div>
-                    <button id="btn-add-itinerary" class="btn-add-repeater"><i class="fa-solid fa-plus"></i> Add Itinerary Day</button>
-                    @error('itineraries.*.title')<span class="error-message text-danger" style="font-size: 0.85rem; margin-top: 4px; display: block;">{{ $message }}</span>@enderror
                 </div>
             </div>
 

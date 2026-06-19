@@ -32,4 +32,12 @@ class Category extends Model
     {
         return $this->hasMany(Category::class, 'parent_id');
     }
+
+    /**
+     * Get the tours for the category.
+     */
+    public function tours()
+    {
+        return $this->hasMany(Tour::class);
+    }
 }

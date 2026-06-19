@@ -13,11 +13,14 @@ class Tour extends Model
         'tour_code', 'name', 'slug', 'overview', 'inclusions', 'exclusions', 'category_id', 'destination_id',
         'original_price', 'discount_price', 'price_type',
         'duration_days', 'duration_nights', 'duration_hours', 'duration_minutes', 'min_guests', 'max_guests',
-        'additional_inclusions'
+        'additional_inclusions', 'related_tours', 'status'
     ];
 
     protected $casts = [
         'additional_inclusions' => 'array',
+        'related_tours' => 'array',
+        'destination_id' => 'array',
+        'status' => 'integer',
     ];
 
     public function category()
@@ -25,9 +28,12 @@ class Tour extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function destination()
+    public function getDestinationsAttribute()
     {
-        return $this->belongsTo(Destination::class);
+        if (empty($this->destination_id) || !is_array($this->destination_id)) {
+            return collect();
+        }
+        return Destination::whereIn('id', $this->destination_id)->get();
     }
 
     public function itineraries()
@@ -56,5 +62,13 @@ class Tour extends Model
             self::$cachedInclusions = \App\Models\AdditionalInclusion::all()->keyBy('id');
         }
         return self::$cachedInclusions->only($this->additional_inclusions);
+    }
+
+    public function getRelatedToursModelsAttribute()
+    {
+        if (empty($this->related_tours) || !is_array($this->related_tours)) {
+            return collect();
+        }
+        return self::whereIn('id', $this->related_tours)->get();
     }
 }

@@ -11,6 +11,7 @@ Route::post('/admin/logout', [LoginController::class, 'logout']);
 
 use App\Http\Controllers\Admin\CompanySettingController;
 use App\Http\Controllers\Admin\SmtpSettingController;
+use App\Http\Controllers\Admin\PageSettingController;
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index']);
@@ -22,6 +23,17 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/settings/policies', [CompanySettingController::class, 'updatePolicies']);
     Route::get('/admin/settings/smtp', [SmtpSettingController::class, 'index']);
     Route::post('/admin/settings/smtp', [SmtpSettingController::class, 'update']);
+    Route::get('/admin/settings/hero', [\App\Http\Controllers\Admin\HeroSettingController::class, 'index']);
+    Route::post('/admin/settings/hero', [\App\Http\Controllers\Admin\HeroSettingController::class, 'update']);
+    
+    // Page Settings
+    Route::get('/admin/settings/pages/home', [PageSettingController::class, 'home'])->name('admin.settings.pages.home');
+    Route::post('/admin/settings/pages/home/header', [PageSettingController::class, 'updateHomeHeader'])->name('admin.settings.pages.home.header');
+    Route::post('/admin/settings/pages/home/about', [PageSettingController::class, 'updateAbout'])->name('admin.settings.pages.home.about.update');
+    Route::post('/admin/settings/pages/home/service', [PageSettingController::class, 'storeService'])->name('admin.settings.pages.home.service.store');
+    Route::post('/admin/settings/pages/home/service/{id}', [PageSettingController::class, 'updateService'])->name('admin.settings.pages.home.service.update');
+    Route::delete('/admin/settings/pages/home/service/{id}', [PageSettingController::class, 'destroyService'])->name('admin.settings.pages.home.service.destroy');
+    Route::post('/admin/settings/pages/home/service/reorder', [PageSettingController::class, 'reorderServices'])->name('admin.settings.pages.home.service.reorder');
     Route::resource('/admin/settings/slider', \App\Http\Controllers\Admin\WebsiteController::class)->except(['show']);
     Route::get('/admin/settings/testimonial', [\App\Http\Controllers\Admin\WebsiteController::class, 'testimonialIndex']);
     Route::get('/admin/settings/testimonial/create', [\App\Http\Controllers\Admin\WebsiteController::class, 'testimonialCreate']);
@@ -40,6 +52,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Tours
     Route::resource('/admin/tours', \App\Http\Controllers\Admin\TourController::class)->except(['show']);
     Route::delete('/admin/tours/image/{id}', [\App\Http\Controllers\Admin\TourController::class, 'deleteImage']);
+    Route::patch('/admin/tours/{tour}/toggle-status', [\App\Http\Controllers\Admin\TourController::class, 'toggleStatus'])->name('tours.toggle-status');
 
     // Additional Inclusions
     Route::get('/admin/additional-inclusions', [\App\Http\Controllers\Admin\TourController::class, 'inclusionIndex'])->name('additional-inclusions.index');
@@ -54,13 +67,21 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Categories
     Route::resource('/admin/categories', \App\Http\Controllers\Admin\CategoryController::class)->except(['show']);
+
+    // Enquiries
+    Route::get('/admin/enquiries', [\App\Http\Controllers\Admin\EnquiryController::class, 'index']);
+    Route::get('/admin/enquiries/{id}', [\App\Http\Controllers\Admin\EnquiryController::class, 'show']);
+    Route::delete('/admin/enquiries/{id}', [\App\Http\Controllers\Admin\EnquiryController::class, 'destroy']);
 });
 
 Route::get('/', [SiteController::class, 'home']);
 Route::get('/about', [SiteController::class, 'about']);
 Route::get('/destination', [SiteController::class, 'destination']);
+Route::get('/tours', [SiteController::class, 'tours']);
 Route::get('/hotel', [SiteController::class, 'hotel']);
 Route::get('/blog', [SiteController::class, 'blog']);
 Route::get('/blog-single/{slug}', [SiteController::class, 'blogSingle']);
 Route::get('/tour/{slug}', [SiteController::class, 'tourDetail']);
 Route::get('/contact', [SiteController::class, 'contact']);
+Route::post('/enquiry/submit', [\App\Http\Controllers\EnquiryController::class, 'submit']);
+Route::get('/ajax-search', [SiteController::class, 'ajaxSearch'])->name('ajax.search');

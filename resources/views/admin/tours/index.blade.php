@@ -2,6 +2,55 @@
 
 @section('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/admin/pages.css') }}">
+    <style>
+        /* Custom Toggle Switch Styling */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 42px;
+            height: 22px;
+            margin-bottom: 0;
+            vertical-align: middle;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: .3s;
+            border-radius: 22px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #10b981;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -38,7 +87,7 @@
                                     {{ $tour->category->name ?? 'N/A' }}
                                 </span>
                             </td>
-                            <td>{{ $tour->destination->name ?? 'N/A' }}</td>
+                            <td>{{ $tour->destinations->pluck('name')->implode(', ') ?: 'N/A' }}</td>
                             <td>
                                 @if($tour->discount_price)
                                     <span style="text-decoration: line-through; color: #9CA3AF; font-size: 0.85rem;">${{ number_format($tour->original_price, 2) }}</span>
@@ -49,7 +98,11 @@
                                 <div style="font-size: 0.75rem; color: #6B7280; text-transform: uppercase;">{{ str_replace('_', ' ', $tour->price_type) }}</div>
                             </td>
                             <td>
-                                <div class="table-actions" style="justify-content: center;">
+                                <div class="table-actions" style="justify-content: center; align-items: center; gap: 12px;">
+                                    <label class="switch" title="Toggle Status">
+                                        <input type="checkbox" class="status-toggle" data-id="{{ $tour->id }}" {{ $tour->status ? 'checked' : '' }}>
+                                        <span class="slider"></span>
+                                    </label>
                                     <a href="{{ url('/admin/tours/' . $tour->id . '/edit') }}" class="btn-table-action" title="Edit">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
@@ -93,6 +146,30 @@
                 }
             });
         }
+
+        $(document).on('change', '.status-toggle', function() {
+            let tourId = $(this).data('id');
+            let isChecked = $(this).is(':checked') ? 1 : 0;
+            let self = $(this);
+            
+            $.ajax({
+                url: `/admin/tours/${tourId}/toggle-status`,
+                type: 'PATCH',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (!response.success) {
+                        self.prop('checked', !isChecked);
+                        alert(response.message || 'Failed to update status.');
+                    }
+                },
+                error: function() {
+                    self.prop('checked', !isChecked);
+                    alert('Something went wrong. Please try again.');
+                }
+            });
+        });
     });
 </script>
 @endsection

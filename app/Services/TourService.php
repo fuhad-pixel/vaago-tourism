@@ -10,7 +10,7 @@ class TourService
 {
     public function getAllTours()
     {
-        return Tour::with(['category', 'destination'])->latest()->get();
+        return Tour::with(['category'])->latest()->get();
     }
 
     public function generateTourCode()
@@ -46,6 +46,7 @@ class TourService
             'min_guests' => $data['min_guests'] ?? null,
             'max_guests' => $data['max_guests'] ?? null,
             'additional_inclusions' => $data['additional_inclusions'] ?? null,
+            'related_tours' => $data['related_tours'] ?? null,
         ]);
 
         if (isset($data['images']) && is_array($data['images'])) {
@@ -96,6 +97,7 @@ class TourService
             'min_guests' => $data['min_guests'] ?? null,
             'max_guests' => $data['max_guests'] ?? null,
             'additional_inclusions' => $data['additional_inclusions'] ?? null,
+            'related_tours' => $data['related_tours'] ?? null,
         ]);
 
         if (isset($data['images']) && is_array($data['images'])) {

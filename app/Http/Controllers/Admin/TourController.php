@@ -31,8 +31,9 @@ class TourController extends Controller
         $destinations = Destination::orderBy('name')->get();
         $faqs = Faq::orderBy('question')->get();
         $additionalInclusions = \App\Models\AdditionalInclusion::orderBy('name')->get();
+        $allTours = Tour::orderBy('name')->get();
 
-        return view('admin.tours.create', compact('categories', 'destinations', 'faqs', 'additionalInclusions'));
+        return view('admin.tours.create', compact('categories', 'destinations', 'faqs', 'additionalInclusions', 'allTours'));
     }
 
     public function store(Request $request)
@@ -44,7 +45,8 @@ class TourController extends Controller
             'inclusions' => 'nullable|string',
             'exclusions' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
-            'destination_id' => 'required|exists:destinations,id',
+            'destination_id' => 'required|array',
+            'destination_id.*' => 'exists:destinations,id',
             'original_price' => 'required|numeric|min:0',
             'discount_price' => 'nullable|numeric|min:0',
             'price_type' => 'required|in:per_person,per_vehicle,per_group',
@@ -60,6 +62,8 @@ class TourController extends Controller
             'faqs.*' => 'exists:faqs,id',
             'additional_inclusions' => 'nullable|array',
             'additional_inclusions.*' => 'exists:additional_inclusions,id',
+            'related_tours' => 'nullable|array',
+            'related_tours.*' => 'exists:tours,id',
             'itineraries' => 'nullable|array',
             'itineraries.*.title' => 'required_with:itineraries|string|max:255',
             'itineraries.*.description' => 'nullable|string',
@@ -80,10 +84,11 @@ class TourController extends Controller
         $destinations = Destination::orderBy('name')->get();
         $faqs = Faq::orderBy('question')->get();
         $additionalInclusions = \App\Models\AdditionalInclusion::orderBy('name')->get();
+        $allTours = Tour::where('id', '!=', $tour->id)->orderBy('name')->get();
         
         $tour->load('itineraries', 'faqs', 'images');
 
-        return view('admin.tours.edit', compact('tour', 'categories', 'destinations', 'faqs', 'additionalInclusions'));
+        return view('admin.tours.edit', compact('tour', 'categories', 'destinations', 'faqs', 'additionalInclusions', 'allTours'));
     }
 
     public function update(Request $request, Tour $tour)
@@ -95,7 +100,8 @@ class TourController extends Controller
             'inclusions' => 'nullable|string',
             'exclusions' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
-            'destination_id' => 'required|exists:destinations,id',
+            'destination_id' => 'required|array',
+            'destination_id.*' => 'exists:destinations,id',
             'original_price' => 'required|numeric|min:0',
             'discount_price' => 'nullable|numeric|min:0',
             'price_type' => 'required|in:per_person,per_vehicle,per_group',
@@ -111,6 +117,8 @@ class TourController extends Controller
             'faqs.*' => 'exists:faqs,id',
             'additional_inclusions' => 'nullable|array',
             'additional_inclusions.*' => 'exists:additional_inclusions,id',
+            'related_tours' => 'nullable|array',
+            'related_tours.*' => 'exists:tours,id',
             'itineraries' => 'nullable|array',
             'itineraries.*.title' => 'required_with:itineraries|string|max:255',
             'itineraries.*.description' => 'nullable|string',
@@ -186,5 +194,17 @@ class TourController extends Controller
         $this->tourService->deleteInclusion($inclusion);
 
         return redirect('/admin/additional-inclusions')->with('success', 'Inclusion deleted successfully.');
+    }
+
+    public function toggleStatus(Tour $tour)
+    {
+        $tour->status = $tour->status == 1 ? 0 : 1;
+        $tour->save();
+
+        return response()->json([
+            'success' => true,
+            'status' => $tour->status,
+            'message' => 'Tour status updated successfully.'
+        ]);
     }
 }

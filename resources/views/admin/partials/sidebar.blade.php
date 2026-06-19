@@ -67,6 +67,11 @@
                 <i class="fa-solid fa-list-check"></i> <span class="menu-text">Categories</span>
             </a>
         </li>
+        <li>
+            <a href="{{ url('/admin/enquiries') }}" class="{{ request()->is('admin/enquiries*') ? 'active' : '' }}">
+                <i class="fa-solid fa-envelope-open-text"></i> <span class="menu-text">Enquiries</span>
+            </a>
+        </li>
         <li class="has-submenu {{ request()->is('admin/settings*') ? 'open' : '' }}">
             <a href="javascript:void(0)" class="submenu-toggle {{ request()->is('admin/settings*') ? 'active' : '' }}">
                 <i class="fa-solid fa-gear"></i> <span class="menu-text">Settings</span>
@@ -94,6 +99,16 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ url('/admin/settings/hero') }}" class="submenu-link {{ request()->is('admin/settings/hero*') ? 'active' : '' }}">
+                        <i class="fa-solid fa-circle submenu-dot"></i> <span class="menu-text">Hero Settings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url('/admin/settings/pages/home') }}" class="submenu-link {{ request()->is('admin/settings/pages/home*') ? 'active' : '' }}">
+                        <i class="fa-solid fa-circle submenu-dot"></i> <span class="menu-text">Page Settings</span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{ url('/admin/settings/smtp') }}" class="submenu-link {{ request()->is('admin/settings/smtp') ? 'active' : '' }}">
                         <i class="fa-solid fa-circle submenu-dot"></i> <span class="menu-text">SMTP Settings</span>
                     </a>
@@ -101,4 +116,36 @@
             </ul>
         </li>
     </ul>
+</div>
+
+<div class="sidebar-illustration">
+    <svg viewBox="0 0 280 120" xmlns="http://www.w3.org/2000/svg" class="sidebar-svg">
+      <circle cx="140" cy="75" r="14" fill="#FF8E53" opacity="0.75" />
+      <polygon points="40,120 100,50 160,120" fill="#043237" />
+      <polygon points="120,120 190,60 260,120" fill="#074449" />
+      <polygon points="80,120 145,40 210,120" fill="#053b40" />
+      <rect x="0" y="112" width="280" height="8" fill="#032124" />
+      <line x1="20" y1="114" x2="260" y2="114" stroke="#08565d" stroke-width="1" />
+      <line x1="50" y1="117" x2="230" y2="117" stroke="#0a676f" stroke-width="1" />
+      <g transform="translate(100, 103)">
+        <path d="M 0 0 L 16 0 L 12 4 L 4 4 Z" fill="#00B8A9" />
+        <line x1="8" y1="0" x2="8" y2="-10" stroke="#00B8A9" stroke-width="1.2" />
+        <polygon points="8,-10 8,-2 13,-2" fill="#00E5FF" opacity="0.8" />
+        <polygon points="7,-10 7,-3 3,-3" fill="#00E5FF" opacity="0.8" />
+      </g>
+      <g transform="translate(15, 120)">
+        <path d="M 15 0 Q 18 -25 25 -45 Q 26 -45 23 -45 Q 16 -25 13 0 Z" fill="#032124" />
+        <path d="M 25 -45 Q 10 -40 2 -32 Q 10 -35 25 -45" fill="#032124" />
+        <path d="M 25 -45 Q 15 -55 8 -53 Q 18 -48 25 -45" fill="#032124" />
+        <path d="M 25 -45 Q 28 -60 38 -55 Q 32 -48 25 -45" fill="#032124" />
+        <path d="M 25 -45 Q 40 -45 42 -35 Q 35 -40 25 -45" fill="#032124" />
+        <path d="M 25 -45 Q 35 -30 38 -20 Q 30 -30 25 -45" fill="#032124" />
+      </g>
+      <g transform="translate(240, 120)">
+        <path d="M 10 0 Q 8 -15 3 -28 Q 2 -28 4 -28 Q 9 -15 11 0 Z" fill="#032124" opacity="0.8" />
+        <path d="M 3 -28 Q -5 -25 -10 -20 Q -5 -22 3 -28" fill="#032124" opacity="0.8" />
+        <path d="M 3 -28 Q 0 -35 -5 -33 Q 0 -30 3 -28" fill="#032124" opacity="0.8" />
+        <path d="M 3 -28 Q 5 -38 12 -35 Q 8 -30 3 -28" fill="#032124" opacity="0.8" />
+      </g>
+    </svg>
 </div>
