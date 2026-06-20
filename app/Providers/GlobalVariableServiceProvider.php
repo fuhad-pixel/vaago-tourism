@@ -30,8 +30,20 @@ class GlobalVariableServiceProvider extends ServiceProvider
             } else {
                 View::share('company_setting', new CompanySetting());
             }
+
+            if (Schema::hasTable('system_modules')) {
+                $gtm_head = \App\Models\SystemModule::where('key', 'gtm_head')->first()->value ?? '';
+                $gtm_body = \App\Models\SystemModule::where('key', 'gtm_body')->first()->value ?? '';
+                View::share('gtm_head', $gtm_head);
+                View::share('gtm_body', $gtm_body);
+            } else {
+                View::share('gtm_head', '');
+                View::share('gtm_body', '');
+            }
         } catch (\Exception $e) {
             View::share('company_setting', new CompanySetting());
+            View::share('gtm_head', '');
+            View::share('gtm_body', '');
         }
     }
 }

@@ -7,71 +7,79 @@
         @endif
     </div>
     <ul class="sidebar-nav">
+        @can('manage_dashboard')
         <li>
             <a href="{{ url('/admin/dashboard') }}" class="{{ request()->is('admin/dashboard') ? 'active' : '' }}">
                 <i class="fa-solid fa-layer-group"></i> <span class="menu-text">Dashboard</span>
             </a>
         </li>
-        <!-- <li>
-            <a href="#">
-                <i class="fa-solid fa-calendar-check"></i> <span class="menu-text">Bookings</span>
-            </a>
-        </li> -->
+        @endcan
+
+        @can('manage_tours')
         <li>
             <a href="{{ url('/admin/tours') }}" class="{{ request()->is('admin/tours*') ? 'active' : '' }}">
                 <i class="fa-solid fa-route"></i> <span class="menu-text">Tours</span>
             </a>
         </li>
+        @endcan
+
+        @can('manage_inclusions')
         <li>
             <a href="{{ url('/admin/additional-inclusions') }}" class="{{ request()->is('admin/additional-inclusions*') ? 'active' : '' }}">
                 <i class="fa-solid fa-folder-plus"></i> <span class="menu-text">Inclusions</span>
             </a>
         </li>
+        @endcan
+
+        @can('manage_faqs')
         <li>
             <a href="{{ url('/admin/faqs') }}" class="{{ request()->is('admin/faqs*') ? 'active' : '' }}">
                 <i class="fa-solid fa-circle-question"></i> <span class="menu-text">FAQs</span>
             </a>
         </li>
+        @endcan
+
+        @can('manage_destinations')
         <li>
             <a href="{{ url('/admin/destinations') }}" class="{{ request()->is('admin/destinations*') ? 'active' : '' }}">
                 <i class="fa-solid fa-earth-americas"></i> <span class="menu-text">Destinations</span>
             </a>
         </li>
-        <!-- <li>
-            <a href="#">
-                <i class="fa-solid fa-hotel"></i> <span class="menu-text">Hotels</span>
+        @endcan
+
+        @can('manage_travel_guides')
+        <li>
+            <a href="{{ url('/admin/travel-guides') }}" class="{{ request()->is('admin/travel-guides*') ? 'active' : '' }}">
+                <i class="fa-solid fa-id-card"></i> <span class="menu-text">Travel Guides</span>
             </a>
         </li>
-        <li>
-            <a href="#">
-                <i class="fa-solid fa-users"></i> <span class="menu-text">Customers</span>
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <i class="fa-solid fa-user-tie"></i> <span class="menu-text">Guides</span>
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <i class="fa-solid fa-star"></i> <span class="menu-text">Reviews</span>
-            </a>
-        </li> -->
+        @endcan
+
+        @can('manage_blogs')
         <li>
             <a href="{{ url('/admin/blogs') }}" class="{{ request()->is('admin/blogs*') ? 'active' : '' }}">
                 <i class="fa-solid fa-blog"></i> <span class="menu-text">Blogs</span>
             </a>
         </li>
+        @endcan
+
+        @can('manage_categories')
         <li>
             <a href="{{ url('/admin/categories') }}" class="{{ request()->is('admin/categories*') ? 'active' : '' }}">
                 <i class="fa-solid fa-list-check"></i> <span class="menu-text">Categories</span>
             </a>
         </li>
+        @endcan
+
+        @can('manage_enquiries')
         <li>
             <a href="{{ url('/admin/enquiries') }}" class="{{ request()->is('admin/enquiries*') ? 'active' : '' }}">
                 <i class="fa-solid fa-envelope-open-text"></i> <span class="menu-text">Enquiries</span>
             </a>
         </li>
+        @endcan
+
+        @can('manage_settings')
         <li class="has-submenu {{ request()->is('admin/settings*') ? 'open' : '' }}">
             <a href="javascript:void(0)" class="submenu-toggle {{ request()->is('admin/settings*') ? 'active' : '' }}">
                 <i class="fa-solid fa-gear"></i> <span class="menu-text">Settings</span>
@@ -115,6 +123,32 @@
                 </li>
             </ul>
         </li>
+        @endcan
+
+        @if(auth()->user()->can('manage_users') || auth()->user()->can('manage_roles'))
+        <li class="has-submenu {{ request()->is('admin/roles*') || request()->is('admin/users*') ? 'open' : '' }}">
+            <a href="javascript:void(0)" class="submenu-toggle {{ request()->is('admin/roles*') || request()->is('admin/users*') ? 'active' : '' }}">
+                <i class="fa-solid fa-users-gear"></i> <span class="menu-text">User Management</span>
+                <i class="fa-solid fa-chevron-down submenu-icon" style="margin-left: auto; transition: transform 0.3s; {{ request()->is('admin/roles*') || request()->is('admin/users*') ? 'transform: rotate(180deg);' : '' }}"></i>
+            </a>
+            <ul class="submenu" style="{{ request()->is('admin/roles*') || request()->is('admin/users*') ? 'display: block;' : 'display: none;' }} list-style: none; padding: 0; margin: 0;">
+                @can('manage_users')
+                <li>
+                    <a href="{{ url('/admin/users') }}" class="submenu-link {{ request()->is('admin/users*') ? 'active' : '' }}">
+                        <i class="fa-solid fa-circle submenu-dot"></i> <span class="menu-text">Users</span>
+                    </a>
+                </li>
+                @endcan
+                @can('manage_roles')
+                <li>
+                    <a href="{{ url('/admin/roles') }}" class="submenu-link {{ request()->is('admin/roles*') ? 'active' : '' }}">
+                        <i class="fa-solid fa-circle submenu-dot"></i> <span class="menu-text">Roles</span>
+                    </a>
+                </li>
+                @endcan
+            </ul>
+        </li>
+        @endif
     </ul>
 </div>
 

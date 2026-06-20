@@ -197,6 +197,7 @@
       <!--================= About Area end =================-->
 
       <!--================= Travel-guides start =================-->
+      @if(isset($travel_guide_status) && $travel_guide_status == '1' && isset($travel_guides) && $travel_guides->count() > 0)
       <section
         class="travel-guides bg-second-theme-color position-relative space"
         data-bg-src="{{ asset('assets/img/bg/travel-guides-bg.png') }}"
@@ -228,101 +229,42 @@
             </div>
           </div>
           <div class="row g-4">
-            <div class="col-md-6 col-lg-4 col-xl-3 fade-anim" data-delay="0.30">
+            @foreach($travel_guides as $index => $guide)
+            <div class="col-md-6 col-lg-4 col-xl-3 fade-anim" data-delay="{{ 0.30 + ($index * 0.10) }}">
               <div class="guide-box">
                 <figure class="guide-thumb">
+                  @if($guide->photo)
                   <img
-                    src="{{ asset('assets/img/guides/guide-1-1.png') }}"
-                    alt="guide"
+                    src="{{ asset($guide->photo) }}"
+                    alt="{{ $guide->name }}"
                     class="w-100"
+                    style="height: 350px; object-fit: cover;"
                   />
+                  @else
+                  <div class="w-100" style="height: 350px; background: #e2e8f0; display: flex; align-items: center; justify-content: center;">
+                      <i class="fa-solid fa-user text-secondary" style="font-size: 4rem;"></i>
+                  </div>
+                  @endif
                 </figure>
                 <div class="guide-content text-center">
                   <h5
                     class="guide-name line-clamp-1 text-second-theme-color text-capitalize"
                   >
-                    daniella alonso
+                    {{ $guide->name }}
                   </h5>
                   <p
                     class="guide-designation line-clamp-1 text-theme-color text-capitalize"
                   >
-                    Travel Guides
+                    {{ $guide->designation ?? 'Travel Guide' }}
                   </p>
                 </div>
               </div>
             </div>
-            <div class="col-md-6 col-lg-4 col-xl-3 fade-anim" data-delay="0.40">
-              <div class="guide-box">
-                <figure class="guide-thumb">
-                  <img
-                    src="{{ asset('assets/img/guides/guide-1-2.png') }}"
-                    alt="guide"
-                    class="w-100"
-                  />
-                </figure>
-                <div class="guide-content text-center">
-                  <h5
-                    class="guide-name line-clamp-1 text-second-theme-color text-capitalize"
-                  >
-                    Alexandra Dadd
-                  </h5>
-                  <p
-                    class="guide-designation line-clamp-1 text-theme-color text-capitalize"
-                  >
-                    Travel Guides
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-4 col-xl-3 fade-anim" data-delay="0.50">
-              <div class="guide-box">
-                <figure class="guide-thumb">
-                  <img
-                    src="{{ asset('assets/img/guides/guide-1-3.png') }}"
-                    alt="guide"
-                    class="w-100"
-                  />
-                </figure>
-                <div class="guide-content text-center">
-                  <h5
-                    class="guide-name line-clamp-1 text-second-theme-color text-capitalize"
-                  >
-                    erica fernandes
-                  </h5>
-                  <p
-                    class="guide-designation line-clamp-1 text-theme-color text-capitalize"
-                  >
-                    Travel Guides
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-4 col-xl-3 fade-anim" data-delay="0.60">
-              <div class="guide-box">
-                <figure class="guide-thumb">
-                  <img
-                    src="{{ asset('assets/img/guides/guide-1-4.png') }}"
-                    alt="guide"
-                    class="w-100"
-                  />
-                </figure>
-                <div class="guide-content text-center">
-                  <h5
-                    class="guide-name line-clamp-1 text-second-theme-color text-capitalize"
-                  >
-                    daniel craig
-                  </h5>
-                  <p
-                    class="guide-designation line-clamp-1 text-theme-color text-capitalize"
-                  >
-                    Travel Guides
-                  </p>
-                </div>
-              </div>
-            </div>
+            @endforeach
           </div>
         </div>
       </section>
+      @endif
       <!--================= Travel-guides end =================-->
 
       <!--================= Awards Area start =================-->

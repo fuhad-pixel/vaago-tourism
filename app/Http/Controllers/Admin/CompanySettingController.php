@@ -19,7 +19,9 @@ class CompanySettingController extends Controller
     public function index()
     {
         $setting = CompanySetting::first() ?? new CompanySetting();
-        return view('admin.settings.company', compact('setting'));
+        $gtm_head = \App\Models\SystemModule::where('key', 'gtm_head')->first()->value ?? '';
+        $gtm_body = \App\Models\SystemModule::where('key', 'gtm_body')->first()->value ?? '';
+        return view('admin.settings.company', compact('setting', 'gtm_head', 'gtm_body'));
     }
 
     public function update(Request $request)
@@ -44,9 +46,14 @@ class CompanySettingController extends Controller
             'logo' => "$logoRule|image|mimes:jpeg,png,jpg,gif,svg|max:2048",
             'favicon' => "$favRule|image|mimes:jpeg,png,jpg,gif,svg,ico|max:1024",
             'og_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gtm_head' => 'nullable|string',
+            'gtm_body' => 'nullable|string',
         ]);
 
-        $this->companySettingService->updateSettings($validated, $request);
+        $this->companySettingService->updateSettings($request->except(['gtm_head', 'gtm_body']), $request);
+
+        \App\Models\SystemModule::updateOrCreate(['key' => 'gtm_head'], ['value' => $request->gtm_head]);
+        \App\Models\SystemModule::updateOrCreate(['key' => 'gtm_body'], ['value' => $request->gtm_body]);
 
         return redirect()->back()->with('success', 'Company settings updated successfully.');
     }

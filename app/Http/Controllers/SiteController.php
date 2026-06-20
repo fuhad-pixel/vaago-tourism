@@ -28,7 +28,12 @@ class SiteController extends Controller
     public function about() { 
         $hero_setting = \App\Models\HeroSetting::where('page_name', 'about')->first();
         $about_setting = \App\Models\AboutSetting::first();
-        return view('pages.about', compact('hero_setting', 'about_setting')); 
+        
+        $statusModule = \App\Models\SystemModule::where('key', 'travel_guide_status')->first();
+        $travel_guide_status = $statusModule ? $statusModule->value : '0';
+        $travel_guides = $travel_guide_status == '1' ? \App\Models\TravelGuide::all() : collect();
+
+        return view('pages.about', compact('hero_setting', 'about_setting', 'travel_guide_status', 'travel_guides')); 
     }
     public function destination() { 
         $destinations = \App\Models\Destination::orderBy('name')->get()->map(function($destination) {

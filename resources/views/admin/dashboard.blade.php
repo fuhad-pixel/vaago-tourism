@@ -405,24 +405,23 @@
 </div>
 
 <!-- Destination Performance -->
-<div class="panel-header" style="margin-top: 16px;">
-    <span class="panel-title">Top Destinations</span>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; margin-bottom: 16px;">
+    <div class="panel-header" style="margin-top: 0; margin-bottom: 0;">
+        <span class="panel-title">Latest Destinations</span>
+    </div>
+    <a href="{{ url('/admin/destinations') }}" class="enquiries-view-all-btn">
+        <span>View All</span>
+        <i class="fa-solid fa-arrow-right"></i>
+    </a>
 </div>
 <div class="destination-grid">
     @forelse($destinations as $destination)
-    @php
-    $rating = number_format(4.5 + ($destination->id % 5) * 0.1, 1);
-    $bookingsCount = ($destination->tours_count * 15) + ($destination->id * 7);
-    $revenueAmount = number_format($bookingsCount * 1250);
-    @endphp
     <div class="dest-card">
         <img src="{{ $destination->image ? asset($destination->image) : 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?q=80&w=1000&auto=format&fit=crop' }}" alt="{{ $destination->name }}">
-        <div class="dest-glass-badge"><i class="fa-solid fa-star"></i> {{ $rating }}</div>
         <div class="dest-overlay">
             <h4>{{ $destination->name }}</h4>
             <div class="dest-stats">
-                <span>{{ $bookingsCount }} {{ Str::plural('Booking', $bookingsCount) }}</span>
-                <span>${{ $revenueAmount }}</span>
+                <span>{{ $destination->tours_count }} {{ Str::plural('Tour', $destination->tours_count) }}</span>
             </div>
         </div>
     </div>

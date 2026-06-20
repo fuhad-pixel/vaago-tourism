@@ -77,6 +77,20 @@
                             <input type="url" name="linkedin" class="modern-input" value="{{ old('linkedin', $setting->linkedin) }}">
                         </div>
                     </div>
+
+                    <h4 class="form-section-title" style="margin-top: 32px;"><i class="fa-solid fa-code"></i> Google Tag Manager</h4>
+                    
+                    <div class="form-group">
+                        <label>GTM Head Section (&#x3C;head&#x3E;)</label>
+                        <textarea name="gtm_head" class="modern-input" rows="4" placeholder="Paste your GTM head script here...">{{ old('gtm_head', $gtm_head) }}</textarea>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">Code to be placed in the &lt;head&gt; of the page.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>GTM Body Section (&#x3C;body&#x3E;)</label>
+                        <textarea name="gtm_body" class="modern-input" rows="4" placeholder="Paste your GTM body script here...">{{ old('gtm_body', $gtm_body) }}</textarea>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">Code to be placed immediately after the opening &lt;body&gt; tag.</p>
+                    </div>
                 </div>
 
                 <!-- Right Side: Images -->

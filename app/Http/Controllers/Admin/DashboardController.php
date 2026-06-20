@@ -14,10 +14,10 @@ class DashboardController extends Controller
         $totalBlogs = \App\Models\Blog::count();
         $totalEnquiries = \App\Models\Enquiry::count();
 
-        $destinations = \App\Models\Destination::latest()->get()->map(function($destination) {
+        $destinations = \App\Models\Destination::latest()->take(5)->get()->map(function($destination) {
             $destination->tours_count = \App\Models\Tour::whereJsonContains('destination_id', (string)$destination->id)->count();
             return $destination;
-        })->sortByDesc('tours_count')->take(5);
+        });
 
         $recentEnquiries = \App\Models\Enquiry::latest()->take(5)->get();
 

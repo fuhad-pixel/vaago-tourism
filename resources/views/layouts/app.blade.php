@@ -80,8 +80,14 @@
             color: #00656c;
         }
     </style>
+    @if(isset($gtm_head) && !empty(trim($gtm_head)))
+        {!! $gtm_head !!}
+    @endif
 </head>
 <body class="vs-body">
+    @if(isset($gtm_body) && !empty(trim($gtm_body)))
+        {!! $gtm_body !!}
+    @endif
 
     <!-- Preloader -->
     <div class="preloader">

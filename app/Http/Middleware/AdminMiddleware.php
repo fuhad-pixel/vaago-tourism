@@ -15,8 +15,11 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (\Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::user()->role === 'admin') {
-            return $next($request);
+        if (\Illuminate\Support\Facades\Auth::check()) {
+            $user = \Illuminate\Support\Facades\Auth::user();
+            if ($user->role === 'admin' || $user->roles()->count() > 0) {
+                return $next($request);
+            }
         }
         return redirect('/admin')->withErrors(['email' => 'Access Denied. Admins only.']);
     }

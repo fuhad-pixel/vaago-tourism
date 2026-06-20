@@ -53,9 +53,13 @@ class EnquiryController extends Controller
             \Log::error('Mail sending failed: ' . $e->getMessage());
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Thank you! Your holiday inquiry has been received. Our team will get back to you shortly.'
-        ]);
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Thank you! Your holiday inquiry has been received. Our team will get back to you shortly.'
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Thank you! Your holiday inquiry has been received. Our team will get back to you shortly.');
     }
 }
