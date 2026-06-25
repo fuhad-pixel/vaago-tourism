@@ -43,6 +43,8 @@ class CompanySettingController extends Controller
             'twitter' => 'nullable|url|max:255',
             'instagram' => 'nullable|url|max:255',
             'linkedin' => 'nullable|url|max:255',
+            'gst' => 'nullable|numeric|min:0|max:100',
+            'gst_number' => 'nullable|string|max:255',
             'logo' => "$logoRule|image|mimes:jpeg,png,jpg,gif,svg|max:2048",
             'favicon' => "$favRule|image|mimes:jpeg,png,jpg,gif,svg,ico|max:1024",
             'og_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',

@@ -34,7 +34,7 @@
 
         .premium-filter-grid {
           display: grid;
-          grid-template-columns: 1.3fr 1fr 1fr 1fr auto;
+          grid-template-columns: 1.3fr 1fr 1fr auto;
           gap: 20px;
           align-items: flex-end;
         }
@@ -457,7 +457,7 @@
                     </div>
 
                     <!-- Price Field -->
-                    <div class="filter-group">
+                    {{-- <div class="filter-group">
                       <label for="premium-price-dropdown" class="filter-lbl">
                         <i class="fa-regular fa-dollar-sign"></i> Price Limit
                       </label>
@@ -471,7 +471,7 @@
                           <option value="10000" {{ request('price') == '10000' ? 'selected' : '' }}>Up to $10,000</option>
                         </select>
                       </div>
-                    </div>
+                    </div> --}}
 
                     <!-- Submit Button -->
                     <div class="filter-btn-item">
@@ -505,12 +505,12 @@
                           class="premium-card-img"
                         />
                       </a>
-                      @if($tour->discount_price)
+                      {{-- @if($tour->discount_price)
                         @php
                           $discountPercent = round((($tour->original_price - $tour->discount_price) / $tour->original_price) * 100);
                         @endphp
                         <span class="premium-card-discount-badge">{{ $discountPercent }}% OFF</span>
-                      @endif
+                      @endif --}}
 
                       <div class="premium-card-dest-badge">
                         <i class="fa-sharp fa-solid fa-location-dot"></i>
@@ -541,7 +541,7 @@
                             @endif
                           </span>
                         </div>
-                        <div class="ms-auto text-end">
+                        {{-- <div class="ms-auto text-end">
                           <span class="premium-card-price-lbl">From</span>
                           <div class="d-flex align-items-center justify-content-end">
                             @if($tour->discount_price)
@@ -551,7 +551,7 @@
                               <span class="premium-card-price-amount">${{ number_format($tour->original_price, 0) }}</span>
                             @endif
                           </div>
-                        </div>
+                        </div> --}}
                       </div>
 
                       <!-- Meta Details Row 2 -->

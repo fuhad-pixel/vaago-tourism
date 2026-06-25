@@ -196,6 +196,56 @@ class TourController extends Controller
         return redirect('/admin/additional-inclusions')->with('success', 'Inclusion deleted successfully.');
     }
 
+    public function exclusionIndex()
+    {
+        $exclusions = $this->tourService->getAllExclusions();
+        return view('admin.exclusions.index', compact('exclusions'));
+    }
+
+    public function exclusionCreate()
+    {
+        return view('admin.exclusions.create');
+    }
+
+    public function exclusionStore(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'icon' => 'required|string|max:255',
+        ]);
+
+        $this->tourService->createExclusion($validated);
+
+        return redirect('/admin/additional-exclusions')->with('success', 'Exclusion created successfully.');
+    }
+
+    public function exclusionEdit($id)
+    {
+        $exclusion = \App\Models\AdditionalExclusion::findOrFail($id);
+        return view('admin.exclusions.edit', compact('exclusion'));
+    }
+
+    public function exclusionUpdate(Request $request, $id)
+    {
+        $exclusion = \App\Models\AdditionalExclusion::findOrFail($id);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'icon' => 'required|string|max:255',
+        ]);
+
+        $this->tourService->updateExclusion($exclusion, $validated);
+
+        return redirect('/admin/additional-exclusions')->with('success', 'Exclusion updated successfully.');
+    }
+
+    public function exclusionDestroy($id)
+    {
+        $exclusion = \App\Models\AdditionalExclusion::findOrFail($id);
+        $this->tourService->deleteExclusion($exclusion);
+
+        return redirect('/admin/additional-exclusions')->with('success', 'Exclusion deleted successfully.');
+    }
+
     public function toggleStatus(Tour $tour)
     {
         $tour->status = $tour->status == 1 ? 0 : 1;
@@ -206,5 +256,55 @@ class TourController extends Controller
             'status' => $tour->status,
             'message' => 'Tour status updated successfully.'
         ]);
+    }
+
+    public function mealIndex()
+    {
+        $meals = $this->tourService->getAllMeals();
+        return view('admin.meals.index', compact('meals'));
+    }
+
+    public function mealCreate()
+    {
+        return view('admin.meals.create');
+    }
+
+    public function mealStore(Request $request)
+    {
+        $validated = $request->validate([
+            'meal' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        $this->tourService->createMeal($validated);
+
+        return redirect('/admin/meals')->with('success', 'Meal created successfully.');
+    }
+
+    public function mealEdit($id)
+    {
+        $meal = \App\Models\Meal::findOrFail($id);
+        return view('admin.meals.edit', compact('meal'));
+    }
+
+    public function mealUpdate(Request $request, $id)
+    {
+        $meal = \App\Models\Meal::findOrFail($id);
+        $validated = $request->validate([
+            'meal' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        $this->tourService->updateMeal($meal, $validated);
+
+        return redirect('/admin/meals')->with('success', 'Meal updated successfully.');
+    }
+
+    public function mealDestroy($id)
+    {
+        $meal = \App\Models\Meal::findOrFail($id);
+        $this->tourService->deleteMeal($meal);
+
+        return redirect('/admin/meals')->with('success', 'Meal deleted successfully.');
     }
 }

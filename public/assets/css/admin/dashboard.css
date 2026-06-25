@@ -696,8 +696,17 @@ body.sidebar-collapsed .admin-main {
 /* ==========================================================================
    CUSTOM SIDEBAR SCROLLBAR
    ========================================================================== */
+.admin-sidebar {
+    scrollbar-width: none; /* Hide scrollbar in Firefox by default */
+}
+.admin-sidebar:hover {
+    scrollbar-width: thin; /* Show thin scrollbar in Firefox on hover */
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
 .admin-sidebar::-webkit-scrollbar {
-    width: 5px;
+    width: 6px;
+    background: transparent;
 }
 .admin-sidebar::-webkit-scrollbar-track {
     background: transparent;
@@ -705,13 +714,12 @@ body.sidebar-collapsed .admin-main {
 .admin-sidebar::-webkit-scrollbar-thumb {
     background: transparent;
     border-radius: 10px;
-    transition: background 0.3s;
 }
 .admin-sidebar:hover::-webkit-scrollbar-thumb {
-    background: #D1D5DB;
+    background: rgba(255, 255, 255, 0.3);
 }
 .admin-sidebar::-webkit-scrollbar-thumb:hover {
-    background: #9CA3AF;
+    background: rgba(255, 255, 255, 0.5);
 }
 /* Large Tablets & Small Laptops (Max Width: 1200px) */
 @media (max-width: 1200px) {
@@ -897,6 +905,15 @@ body.sidebar-collapsed .admin-main {
     background: #DC2626;
     transform: translateY(-2px);
 }
+.btn-confirm-primary {
+    background: var(--primary, #3B82F6);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+}
+.btn-confirm-primary:hover {
+    background: #2563EB;
+    transform: translateY(-2px);
+}
 @media (max-width: 768px) {
     .header-search input {
         display: none;
@@ -1037,14 +1054,14 @@ body.sidebar-collapsed .admin-main {
     -webkit-text-fill-color: transparent !important;
 }
 
-/* Sidebar Nav styling */
 .sidebar-nav {
-    padding-bottom: 140px !important; /* Add bottom padding so navigation doesn't overlap the illustration */
+    padding-bottom: 20px !important; /* Adjusted padding since illustration is now inline */
 }
 .sidebar-nav a {
     color: rgba(255, 255, 255, 0.9) !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-weight: 700 !important;
+    white-space: nowrap;
 }
 .sidebar-nav a i {
     color: rgba(255, 255, 255, 0.9) !important;
@@ -1086,16 +1103,15 @@ body.sidebar-collapsed .admin-main {
     color: #00B8A9 !important;
 }
 
-/* Sidebar bottom landscape illustration */
 .sidebar-illustration {
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    position: relative;
+    margin-top: auto;
     width: var(--sidebar-width) !important;
     height: 120px;
     pointer-events: none;
     z-index: 5;
     overflow: hidden;
+    flex-shrink: 0;
 }
 .sidebar-illustration svg {
     width: 100%;

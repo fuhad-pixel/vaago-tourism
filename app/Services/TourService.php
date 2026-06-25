@@ -185,4 +185,58 @@ class TourService
     {
         return $inclusion->delete();
     }
+
+    public function getAllExclusions()
+    {
+        return \App\Models\AdditionalExclusion::latest()->get();
+    }
+
+    public function createExclusion(array $data)
+    {
+        return \App\Models\AdditionalExclusion::create([
+            'name' => $data['name'],
+            'icon' => $data['icon']
+        ]);
+    }
+
+    public function updateExclusion(\App\Models\AdditionalExclusion $exclusion, array $data)
+    {
+        $exclusion->update([
+            'name' => $data['name'],
+            'icon' => $data['icon']
+        ]);
+        return $exclusion;
+    }
+
+    public function deleteExclusion(\App\Models\AdditionalExclusion $exclusion)
+    {
+        return $exclusion->delete();
+    }
+
+    public function getAllMeals()
+    {
+        return \App\Models\Meal::latest()->get();
+    }
+
+    public function createMeal(array $data)
+    {
+        return \App\Models\Meal::create([
+            'meal' => $data['meal'],
+            'description' => $data['description'] ?? null,
+        ]);
+    }
+
+    public function updateMeal(\App\Models\Meal $meal, array $data)
+    {
+        $meal->update([
+            'meal' => $data['meal'],
+            'description' => $data['description'] ?? null,
+        ]);
+        return $meal;
+    }
+
+    public function deleteMeal(\App\Models\Meal $meal)
+    {
+        return $meal->delete();
+    }
 }

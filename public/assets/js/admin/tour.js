@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div class="repeater-header">
                     <i class="fa-solid fa-calendar-day"></i> Day <span class="day-number">${itineraryIndex + 1}</span>
                 </div>
+                <div class="btn-duplicate" title="Duplicate Itinerary"><i class="fa-regular fa-copy"></i></div>
                 <div class="btn-remove" title="Remove Itinerary"><i class="fa-solid fa-trash-can"></i></div>
                 <div class="form-group">
                     <label>Title <span class="text-danger">*</span></label>
@@ -45,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 ClassicEditor
                     .create(newTextarea, { minHeight: '300px' })
                     .then(editor => {
+                        newTextarea.editorInstance = editor; // Save instance for duplication
                         editor.model.document.on('change:data', () => {
                             newTextarea.value = editor.getData();
                             $(newTextarea).trigger('change');
@@ -64,6 +66,53 @@ document.addEventListener("DOMContentLoaded", function () {
                     block.remove();
                     updateDayNumbers();
                 });
+            }
+
+            if (e.target.closest('.btn-duplicate')) {
+                const block = e.target.closest('.itinerary-block');
+                
+                const titleInput = block.querySelector('.required-itinerary-title');
+                const titleValue = titleInput ? titleInput.value : '';
+                
+                const textarea = block.querySelector('.dynamic-ckeditor') || block.querySelector('.ckeditor-init');
+                let descriptionValue = '';
+                if (textarea) {
+                    const id = textarea.id || textarea.name;
+                    if (window.editorInstances && window.editorInstances[id]) {
+                        descriptionValue = window.editorInstances[id].getData();
+                    } else if (textarea.editorInstance) {
+                        descriptionValue = textarea.editorInstance.getData();
+                    } else {
+                        descriptionValue = textarea.value;
+                    }
+                }
+                
+                // Add a new block by triggering the button click
+                addItineraryBtn.click();
+                
+                // The newly added block is the last one in the container
+                const newBlock = itineraryContainer.lastElementChild;
+                
+                // Set the title
+                const newTitleInput = newBlock.querySelector('.required-itinerary-title');
+                if(newTitleInput) newTitleInput.value = titleValue;
+                
+                // Set the description
+                const newTextarea = newBlock.querySelector('.dynamic-ckeditor');
+                if(newTextarea) {
+                    newTextarea.value = descriptionValue;
+                    // Try to update CKEditor data directly if it's already initialized
+                    if (newTextarea.editorInstance) {
+                        newTextarea.editorInstance.setData(descriptionValue);
+                    } else {
+                        // Wait slightly for CKEditor to finish initializing
+                        setTimeout(() => {
+                            if (newTextarea.editorInstance) {
+                                newTextarea.editorInstance.setData(descriptionValue);
+                            }
+                        }, 150);
+                    }
+                }
             }
         });
 

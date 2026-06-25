@@ -9,6 +9,8 @@
         <link rel="icon" href="{{ asset($company_setting->favicon_path) }}" type="image/x-icon">
     @endif
     @include('partials.styles')
+    <!-- Custom Toast CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/admin/toast.css') }}?v={{ time() }}">
     <style>
         /* Global Search Typeahead Styles */
         .search-suggestions {
@@ -85,6 +87,8 @@
     @endif
 </head>
 <body class="vs-body">
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
     @if(isset($gtm_body) && !empty(trim($gtm_body)))
         {!! $gtm_body !!}
     @endif
@@ -151,6 +155,21 @@
     <a href="#" class="scrollToTop scroll-btn"><i class="far fa-arrow-up"></i></a>
 
     @include('partials.scripts')
+    <!-- Custom Toast JS -->
+    <script src="{{ asset('assets/js/admin/toast.js') }}?v={{ time() }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            @if(session('success'))
+                showToast('success', 'Success', "{{ session('success') }}");
+            @endif
+            @if(session('error'))
+                showToast('error', 'Error', "{{ session('error') }}");
+            @endif
+            @if($errors->any())
+                showToast('error', 'Validation Error', "Please check the form for errors.");
+            @endif
+        });
+    </script>
     @yield('scripts')
 </body>
 </html>

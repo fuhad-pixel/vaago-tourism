@@ -114,6 +114,7 @@
                                 <div class="repeater-header">
                                     <i class="fa-solid fa-calendar-day"></i> Day <span class="day-number">{{ $index + 1 }}</span>
                                 </div>
+                                <div class="btn-duplicate" title="Duplicate Itinerary"><i class="fa-regular fa-copy"></i></div>
                                 <div class="btn-remove" title="Remove Itinerary"><i class="fa-solid fa-trash-can"></i></div>
                                 <div class="form-group">
                                     <label>Title <span class="text-danger">*</span></label>

@@ -57,6 +57,19 @@
                         </div>
                     </div>
 
+                    <h4 class="form-section-title" style="margin-top: 32px;"><i class="fa-solid fa-file-invoice-dollar"></i> Tax Information</h4>
+                    
+                    <div class="form-input-grid">
+                        <div class="form-group">
+                            <label>GST Percentage (%)</label>
+                            <input type="number" step="0.01" name="gst" class="modern-input" value="{{ old('gst', $setting->gst) }}" placeholder="e.g. 18">
+                        </div>
+                        <div class="form-group">
+                            <label>GST Number</label>
+                            <input type="text" name="gst_number" class="modern-input" value="{{ old('gst_number', $setting->gst_number) }}" placeholder="e.g. 22AAAAA0000A1Z5">
+                        </div>
+                    </div>
+
                     <h4 class="form-section-title" style="margin-top: 32px;"><i class="fa-solid fa-share-nodes"></i> Social Links</h4>
                     
                     <div class="form-input-grid">

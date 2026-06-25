@@ -16,6 +16,9 @@ use App\Http\Controllers\Admin\PageSettingController;
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->middleware('can:manage_dashboard');
     
+    // Quotations (Interactive / Mockup)
+    Route::get('/admin/quotations/create', [\App\Http\Controllers\Admin\QuotationController::class, 'create'])->name('admin.quotations.create');
+    
     // Settings
     Route::middleware('can:manage_settings')->group(function () {
         Route::get('/admin/settings/company', [CompanySettingController::class, 'index']);
@@ -70,6 +73,26 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::delete('/admin/additional-inclusions/{inclusion}', [\App\Http\Controllers\Admin\TourController::class, 'inclusionDestroy'])->name('additional-inclusions.destroy');
     });
 
+    // Additional Exclusions
+    Route::middleware('can:manage_exclusions')->group(function () {
+        Route::get('/admin/additional-exclusions', [\App\Http\Controllers\Admin\TourController::class, 'exclusionIndex'])->name('additional-exclusions.index');
+        Route::get('/admin/additional-exclusions/create', [\App\Http\Controllers\Admin\TourController::class, 'exclusionCreate'])->name('additional-exclusions.create');
+        Route::post('/admin/additional-exclusions', [\App\Http\Controllers\Admin\TourController::class, 'exclusionStore'])->name('additional-exclusions.store');
+        Route::get('/admin/additional-exclusions/{exclusion}/edit', [\App\Http\Controllers\Admin\TourController::class, 'exclusionEdit'])->name('additional-exclusions.edit');
+        Route::put('/admin/additional-exclusions/{exclusion}', [\App\Http\Controllers\Admin\TourController::class, 'exclusionUpdate'])->name('additional-exclusions.update');
+        Route::delete('/admin/additional-exclusions/{exclusion}', [\App\Http\Controllers\Admin\TourController::class, 'exclusionDestroy'])->name('additional-exclusions.destroy');
+    });
+
+    // Meals
+    Route::middleware('can:manage_meals')->group(function () {
+        Route::get('/admin/meals', [\App\Http\Controllers\Admin\TourController::class, 'mealIndex'])->name('meals.index');
+        Route::get('/admin/meals/create', [\App\Http\Controllers\Admin\TourController::class, 'mealCreate'])->name('meals.create');
+        Route::post('/admin/meals', [\App\Http\Controllers\Admin\TourController::class, 'mealStore'])->name('meals.store');
+        Route::get('/admin/meals/{meal}/edit', [\App\Http\Controllers\Admin\TourController::class, 'mealEdit'])->name('meals.edit');
+        Route::put('/admin/meals/{meal}', [\App\Http\Controllers\Admin\TourController::class, 'mealUpdate'])->name('meals.update');
+        Route::delete('/admin/meals/{meal}', [\App\Http\Controllers\Admin\TourController::class, 'mealDestroy'])->name('meals.destroy');
+    });
+
     // Destinations
     Route::resource('/admin/destinations', \App\Http\Controllers\Admin\DestinationController::class)->except(['show'])->middleware('can:manage_destinations');
 
@@ -81,6 +104,34 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Categories
     Route::resource('/admin/categories', \App\Http\Controllers\Admin\CategoryController::class)->except(['show'])->middleware('can:manage_categories');
+
+    // Hotels
+    Route::middleware('can:manage_hotels')->group(function () {
+        Route::resource('/admin/hotels', \App\Http\Controllers\Admin\HotelController::class)->except(['show']);
+        Route::delete('/admin/hotels/image/{id}', [\App\Http\Controllers\Admin\HotelController::class, 'deleteImage']);
+        Route::post('/admin/hotels/{hotel}/rates', [\App\Http\Controllers\Admin\HotelController::class, 'storeRoomRate'])->name('hotels.rates.store');
+        Route::delete('/admin/hotels/{hotel}/rates/{rate}', [\App\Http\Controllers\Admin\HotelController::class, 'destroyRoomRate'])->name('hotels.rates.destroy');
+    });
+
+    // Activities
+    Route::middleware('can:manage_activities')->group(function () {
+        Route::resource('/admin/activities', \App\Http\Controllers\Admin\ActivityController::class)->except(['show']);
+    });
+
+    // Leads
+    Route::middleware('can:manage_leads')->group(function () {
+        Route::resource('/admin/leads', \App\Http\Controllers\Admin\LeadController::class)->except(['show']);
+    });
+
+    // Vehicles
+    Route::resource('/admin/vehicles', \App\Http\Controllers\Admin\VehicleController::class)->except(['show'])->middleware('can:manage_vehicles');
+
+    // Drivers
+    Route::resource('/admin/drivers', \App\Http\Controllers\Admin\DriverController::class)->except(['show'])->middleware('can:manage_drivers');
+
+    // Quotations
+    Route::post('/admin/quotations/{id}/send-mail', [\App\Http\Controllers\Admin\QuotationController::class, 'sendMail'])->name('admin.quotations.send_mail');
+    Route::resource('/admin/quotations', \App\Http\Controllers\Admin\QuotationController::class)->except(['show']);
 
     // Enquiries
     Route::middleware('can:manage_enquiries')->group(function () {
@@ -104,3 +155,6 @@ Route::get('/tour/{slug}', [SiteController::class, 'tourDetail']);
 Route::get('/contact', [SiteController::class, 'contact']);
 Route::post('/enquiry/submit', [\App\Http\Controllers\EnquiryController::class, 'submit']);
 Route::get('/ajax-search', [SiteController::class, 'ajaxSearch'])->name('ajax.search');
+
+Route::get('/{lead_name}/{quotation_code}', [\App\Http\Controllers\Admin\QuotationController::class, 'showPublic'])->name('quotations.public');
+

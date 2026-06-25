@@ -92,12 +92,17 @@
             @endif
 
             // Global CKEditor initialization
+            window.editorInstances = window.editorInstances || {};
             document.querySelectorAll('.ckeditor-init').forEach(textarea => {
                 ClassicEditor
                     .create(textarea, {
                         minHeight: '300px'
                     })
                     .then(editor => {
+                        const id = textarea.id || textarea.name;
+                        if (id) {
+                            window.editorInstances[id] = editor;
+                        }
                         editor.model.document.on('change:data', () => {
                             textarea.value = editor.getData();
                             $(textarea).trigger('change');

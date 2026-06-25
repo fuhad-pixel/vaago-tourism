@@ -86,7 +86,7 @@
                 </select>
               </div>
               <!-- Price Field -->
-              <div class="form-group">
+              {{-- <div class="form-group">
                 <label for="price-dropdown" class="form-label d-flex align-items-center">
                   <i class="fa-regular fa-usd-circle me-2"></i> Price Limit
                 </label>
@@ -98,7 +98,7 @@
                   <option value="5000">Up to $5,000</option>
                   <option value="10000">Up to $10,000</option>
                 </select>
-              </div>
+              </div> --}}
               <!-- Submit Button -->
               <div class="form-group pe-0">
                 <button type="submit" class="vs-btn style4 w-100">
@@ -112,6 +112,42 @@
       <!--================= Hero Area end =================-->
 
       <!--================= Destination Area start =================-->
+      <style>
+        @media (min-width: 992px) {
+            /* Smooth transition for the text appearing/disappearing */
+            .destination-box .destination-content .info {
+                transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
+            }
+            
+            /* Hide info by default for non-active cards when wrapper is not hovered */
+            .destination-box-wrapper:not(:hover) .destination-box:not(.active) .destination-content .info {
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(15px);
+            }
+            
+            /* When wrapper is hovered, hide info for ALL cards */
+            .destination-box-wrapper:hover .destination-box .destination-content .info {
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(15px);
+            }
+            
+            /* But show info for the SPECIFIC card being hovered */
+            .destination-box-wrapper:hover .destination-box:hover .destination-content .info {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+            
+            /* Ensure the active card shows info when wrapper is not hovered */
+            .destination-box-wrapper:not(:hover) .destination-box.active .destination-content .info {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+        }
+      </style>
       <section
         class="vs-destination-style1 bg-third-theme-12 overflow-hidden space"
         data-bg-src="{{ asset('assets/img/bg/destination.png') }}"
@@ -143,12 +179,12 @@
                 <div class="destination-box-wrapper">
                   @foreach($destinations->take(4) as $destination)
                     <div class="destination-box @if($loop->first) active @endif" style="cursor: pointer;" onclick="window.location='{{ url('tours?destination_id=' . encrypt($destination->id)) }}'">
-                      <div class="destination-thumb">
+                      <div class="destination-thumb" style="height: 420px;">
                         <img
                           src="{{ asset($destination->image) }}"
                           alt="{{ $destination->name }}"
                           class="w-100"
-                          style="height: 380px; object-fit: cover;"
+                          style="height: 100%; object-fit: cover;"
                         />
                       </div>
                       <div class="destination-content">
@@ -269,7 +305,7 @@
                                   </span>
                                 @endif
                               </div>
-                              <div class="price-info">
+                              {{-- <div class="price-info">
                                 @if($tour->discount_price)
                                   @php
                                     $pct = round((($tour->original_price - $tour->discount_price) / $tour->original_price) * 100);
@@ -286,7 +322,7 @@
                                     <h6 class="fs-30 ff-rubik">${{ number_format($tour->original_price, 0) }}</h6>
                                   </div>
                                 @endif
-                              </div>
+                              </div> --}}
                             </div>
                             <a
                               href="{{ url('tour/' . $tour->slug) }}"

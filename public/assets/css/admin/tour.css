@@ -22,6 +22,18 @@
 .repeater-block .btn-remove:hover {
     color: #B91C1C;
 }
+.repeater-block .btn-duplicate {
+    position: absolute;
+    top: 16px;
+    right: 48px;
+    color: #10B981;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: color 0.2s;
+}
+.repeater-block .btn-duplicate:hover {
+    color: #059669;
+}
 .repeater-header {
     font-weight: 700;
     margin-bottom: 16px;

@@ -225,16 +225,27 @@ document.addEventListener("DOMContentLoaded", function() {
    ========================================================================== */
 let confirmModalCallback = null;
 
-window.showConfirmModal = function(title, message, callback) {
+window.showConfirmModal = function(title, message, callback, options = {}) {
     const overlay = document.getElementById('customConfirmOverlay');
     const titleEl = document.getElementById('customConfirmTitle');
     const messageEl = document.getElementById('customConfirmMessage');
+    const proceedBtn = document.getElementById('customConfirmProceedBtn');
+    const iconContainer = overlay ? overlay.querySelector('.confirm-icon') : null;
     
     if (!overlay) return;
     
     titleEl.textContent = title || 'Confirm Action';
     messageEl.textContent = message || 'Are you sure you want to proceed?';
     confirmModalCallback = callback;
+
+    if (proceedBtn) {
+        proceedBtn.textContent = options.confirmText || 'Yes, Delete';
+        proceedBtn.className = options.confirmClass || 'btn-confirm-proceed';
+    }
+
+    if (iconContainer) {
+        iconContainer.innerHTML = options.iconHtml || '<i class="fa-solid fa-triangle-exclamation"></i>';
+    }
     
     overlay.classList.add('show');
 }

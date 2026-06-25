@@ -325,10 +325,10 @@
                         data: $(form).serialize(),
                         success: function(response) {
                             if (response.success) {
-                                alert(response.message);
+                                showToast('success', 'Success', response.message);
                                 form.reset();
                             } else {
-                                alert('Something went wrong. Please try again.');
+                                showToast('error', 'Error', 'Something went wrong. Please try again.');
                             }
                         },
                         error: function(xhr) {
@@ -336,7 +336,7 @@
                             if(xhr.responseJSON && xhr.responseJSON.message) {
                                 errorMsg = xhr.responseJSON.message;
                             }
-                            alert(errorMsg);
+                            showToast('error', 'Error', errorMsg);
                         },
                         complete: function() {
                             $submitBtn.html(originalBtnText).prop('disabled', false);

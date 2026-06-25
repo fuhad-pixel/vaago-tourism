@@ -17,7 +17,7 @@
     </div>
     
     <div class="page-panel-body">
-        <form action="{{ url('/admin/tours') }}" method="POST" class="validate-form" enctype="multipart/form-data">
+        <form action="{{ url('/admin/tours') }}" method="POST" class="validate-form draft-enabled" enctype="multipart/form-data">
             @csrf
             
             <div class="form-section-grid">
@@ -101,6 +101,7 @@
                                 <div class="repeater-header">
                                     <i class="fa-solid fa-calendar-day"></i> Day <span class="day-number">{{ $index + 1 }}</span>
                                 </div>
+                                <div class="btn-duplicate" title="Duplicate Itinerary"><i class="fa-regular fa-copy"></i></div>
                                 <div class="btn-remove" title="Remove Itinerary"><i class="fa-solid fa-trash-can"></i></div>
                                 <div class="form-group">
                                     <label>Title <span class="text-danger">*</span></label>
@@ -238,4 +239,5 @@
 
 @section('scripts')
     <script src="{{ asset('assets/js/admin/tour.js') }}"></script>
+    <script src="{{ asset('assets/js/admin/form-draft.js') }}"></script>
 @endsection

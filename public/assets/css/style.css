@@ -3635,7 +3635,7 @@ a.text-theme:hover,
   box-shadow: 0px 4px 4px 0px rgba(var(--black-color-rgb), 0.1);
   padding: 20px 35px;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 @media (max-width: 991px) {
