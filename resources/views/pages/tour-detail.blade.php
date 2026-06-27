@@ -161,7 +161,8 @@
   .accordion-body ul,
   .tour-rich-content ul {
     list-style-type: disc !important;
-    padding-left: 20px !important;
+    list-style: disc !important;
+    padding-left: 24px !important;
     margin-top: 10px !important;
     margin-bottom: 15px !important;
   }
@@ -169,7 +170,8 @@
   .accordion-body ol,
   .tour-rich-content ol {
     list-style-type: decimal !important;
-    padding-left: 20px !important;
+    list-style: decimal !important;
+    padding-left: 24px !important;
     margin-top: 10px !important;
     margin-bottom: 15px !important;
   }
@@ -177,8 +179,22 @@
   .accordion-body li,
   .tour-rich-content li {
     margin-bottom: 6px !important;
-    list-style: inherit !important;
     padding-left: 0 !important;
+    display: list-item !important;
+  }
+
+  .accordion-body ul li,
+  .tour-rich-content ul li {
+    list-style-type: disc !important;
+    list-style: disc !important;
+    display: list-item !important;
+  }
+
+  .accordion-body ol li,
+  .tour-rich-content ol li {
+    list-style-type: decimal !important;
+    list-style: decimal !important;
+    display: list-item !important;
   }
 
   .accordion-body li::before,
@@ -342,6 +358,109 @@
       padding: 9px 6px !important;
     }
   }
+
+  /* Breadcrumb spacing to prevent overlay overlap with headers on mobile */
+  .vs-breadcrumb {
+    padding: 240px 0 120px !important;
+  }
+  @media (max-width: 991px) {
+    .vs-breadcrumb {
+      padding: 200px 0 100px !important;
+    }
+  }
+  @media (max-width: 767px) {
+    .vs-breadcrumb {
+      padding: 160px 0 80px !important;
+    }
+  }
+
+  /* Tour Detail page metadata customization */
+  .trip-info-destination-box {
+    grid-column: span 2;
+  }
+  .trip-info-box .info-title {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    text-transform: none !important;
+  }
+  @media (max-width: 424px) {
+    .trip-info-destination-box {
+      grid-column: span 1;
+    }
+  }
+
+  .hover-shadow-sm {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .hover-shadow-sm:hover {
+    border-color: rgba(0, 101, 108, 0.2) !important;
+    background: #ffffff !important;
+    box-shadow: 0 10px 25px -3px rgba(0, 101, 108, 0.08), 0 4px 6px -2px rgba(0, 101, 108, 0.04) !important;
+    transform: translateY(-2px);
+  }
+  .company-contacts-card a small {
+    color: #64748b !important;
+  }
+
+  /* Modern Tour Image Grid */
+  .tour-image-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+  .tour-main-img-wrap,
+  .tour-side-img-item {
+    overflow: hidden;
+    border-radius: 16px;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  }
+  .tour-main-img-wrap img,
+  .tour-side-img-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .tour-main-img-wrap:hover img,
+  .tour-side-img-item:hover img {
+    transform: scale(1.04);
+  }
+  
+  @media (max-width: 768px) {
+    .tour-image-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .tour-main-img-wrap {
+      height: 350px !important;
+    }
+    .tour-side-imgs-wrap {
+      height: auto !important;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: none !important;
+      height: 180px !important;
+    }
+  }
+  @media (max-width: 480px) {
+    .tour-main-img-wrap {
+      height: 250px !important;
+    }
+    .tour-side-imgs-wrap {
+      height: 100px !important;
+    }
+  }
+
+  /* Spacing adjustments */
+  .vs-destination-details {
+    padding-top: 50px !important;
+  }
+  @media (max-width: 767px) {
+    .vs-destination-details {
+      padding-top: 30px !important;
+    }
+  }
 </style>
 
 <!--================= Breadcrumb Area start =================-->
@@ -389,7 +508,7 @@
 <section class="vs-destination-details space bg-theme-07">
   <div class="container">
     <div class="row gx-3 gx-xl-5 gy-5">
-      <div class="col-lg-8">
+      <div class="col-lg-12">
         <div class="vs-destination-single">
           <div class="row align-items-center gy-3 mb-4">
             <div class="col-12">
@@ -400,14 +519,46 @@
           </div>
 
           <div class="destination-single-info">
-            <!-- Main Image -->
-            <figure class="destination-single-img d-block" id="main-tour-hero-img">
-              <img
-                src="{{ $tour->images->count() > 0 ? asset($tour->images->first()->image_path) : asset('assets/img/destination/destination-single-1.png') }}"
-                alt="{{ $tour->name }}"
-                class="w-100"
-                style="border-radius: 15px; height: 450px; object-fit: cover;" />
-            </figure>
+            <!-- Dynamic Tour Image Grid -->
+            @php
+              $tourImages = $tour->images;
+              $imageCount = $tourImages->count();
+            @endphp
+
+            @if($imageCount >= 3)
+              <div class="tour-image-grid">
+                <!-- Main Big Image -->
+                <div class="tour-main-img-wrap" id="main-tour-hero-img" style="height: 450px;">
+                  <img src="{{ asset($tourImages[0]->image_path) }}" alt="{{ $tour->name }}" />
+                </div>
+                <!-- Right Side Small Images -->
+                <div class="tour-side-imgs-wrap" style="display: grid; grid-template-rows: 1fr 1fr; gap: 16px; height: 450px;">
+                  <div class="tour-side-img-item" style="height: 100%;">
+                    <img src="{{ asset($tourImages[1]->image_path) }}" alt="{{ $tour->name }}" />
+                  </div>
+                  <div class="tour-side-img-item" style="height: 100%;">
+                    <img src="{{ asset($tourImages[2]->image_path) }}" alt="{{ $tour->name }}" />
+                  </div>
+                </div>
+              </div>
+            @elseif($imageCount == 2)
+              <div class="tour-image-grid">
+                <div class="tour-main-img-wrap" id="main-tour-hero-img" style="height: 450px;">
+                  <img src="{{ asset($tourImages[0]->image_path) }}" alt="{{ $tour->name }}" />
+                </div>
+                <div class="tour-side-img-item" style="height: 450px;">
+                  <img src="{{ asset($tourImages[1]->image_path) }}" alt="{{ $tour->name }}" />
+                </div>
+              </div>
+            @else
+              <figure class="destination-single-img d-block" id="main-tour-hero-img" style="margin-bottom: 30px;">
+                <img
+                  src="{{ $imageCount > 0 ? asset($tourImages->first()->image_path) : asset('assets/img/destination/destination-single-1.png') }}"
+                  alt="{{ $tour->name }}"
+                  class="w-100"
+                  style="border-radius: 15px; height: 450px; object-fit: cover;" />
+              </figure>
+            @endif
 
             <div class="destination-single-px">
               <div class="trip-info">
@@ -420,14 +571,6 @@
                   <h6 class="info-title">{{ $tour->category->name }}</h6>
                 </div>
                 @endif
-
-                <div class="trip-info-box">
-                  <div class="header">
-                    <i class="fa-solid fa-location-dot text-theme-color" style="font-size: 18px; margin-right: 8px;"></i>
-                    <span>Destination</span>
-                  </div>
-                  <h6 class="info-title">{{ $tour->destinations->pluck('name')->implode(', ') }}</h6>
-                </div>
 
                 @if($tour->duration_days > 0 || $tour->duration_nights > 0)
                 <div class="trip-info-box">
@@ -472,6 +615,14 @@
                   </div>
                   <h6 class="info-title">{{ $tour->tour_code }}</h6>
                 </div>
+
+                <div class="trip-info-box trip-info-destination-box">
+                  <div class="header">
+                    <i class="fa-solid fa-location-dot text-theme-color" style="font-size: 18px; margin-right: 8px;"></i>
+                    <span>Destination</span>
+                  </div>
+                  <h6 class="info-title">{{ ucwords(strtolower($tour->destinations->pluck('name')->implode(', '))) }}</h6>
+                </div>
               </div>
 
               <!-- Destination Tabs menu -->
@@ -489,6 +640,9 @@
                   @endif
                   @if($tour->images->count() > 1)
                   <li class=""><a href="#gallery-tab">Gallery</a></li>
+                  @endif
+                  @if($tour->terms_and_conditions)
+                  <li class=""><a href="#terms-tab">Terms</a></li>
                   @endif
                 </ul>
               </div>
@@ -639,112 +793,92 @@
               </div>
               @endif
 
+              <!-- Tab content: Terms & Conditions -->
+              @if($tour->terms_and_conditions)
+              <div id="terms-tab" class="destination-overview tab-content">
+                <h4 class="title">Terms & Conditions</h4>
+                <div class="tour-rich-content">
+                  {!! $tour->terms_and_conditions !!}
+                </div>
+              </div>
+              @endif
+
 
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Right Sidebar -->
-      <div class="col-lg-4">
-        <div class="sidebar-area tours-sidebar">
-
-          <!-- Price widget -->
-          <div class="widget widget_trip-Availability accordion" id="accordionTripAvailability">
-            <div class="accordion-item">
-              <h6 class="accordion-header">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne_1" aria-expanded="true" aria-controls="collapseOne_1">
-                  Tour Pricing
-                </button>
-              </h6>
-              <div id="collapseOne_1" class="accordion-collapse collapse show" data-bs-parent="#accordionTripAvailability">
-                <div class="accordion-body">
-                  <div class="header">
-                    @if($tour->discount_price)
-                    @php
-                    $discountPercent = round((($tour->original_price - $tour->discount_price) / $tour->original_price) * 100);
-                    @endphp
-                    <span class="offer">{{ $discountPercent }}% off</span>
-                    @endif
-                    <div class="package-wrapper d-flex justify-content-center py-3">
-                      <div class="adult-price text-center">
-                        <div class="title text-muted">
-                          @if($tour->discount_price)
-                          from <del>${{ number_format($tour->original_price, 0) }}</del>
-                          @else
-                          Price
-                          @endif
-                        </div>
-                        <h5 class="price text-theme-color mb-0" style="font-size: 28px;">
-                          ${{ number_format($tour->discount_price ?? $tour->original_price, 0) }}
-                          <span class="text-muted" style="font-size: 14px; font-weight: normal;">/{{ $tour->price_type == 'per_person' ? 'person' : ($tour->price_type == 'per_vehicle' ? 'vehicle' : 'group') }}</span>
-                        </h5>
-                      </div>
+      <!-- Modern Company Contacts Section -->
+      <div class="col-lg-12 mt-4">
+        <div class="company-contacts-card" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); background: #fff; padding: 30px; border: 1px solid rgba(0, 101, 108, 0.15);">
+          <div class="row align-items-center gy-4">
+            <div class="col-md-3">
+              <h4 style="font-size: 20px; font-weight: 800; color: #141414; margin-bottom: 5px; display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-headset text-theme-color"></i> Get in Touch
+              </h4>
+              <p style="font-size: 13px; color: #64748b; margin-bottom: 0;">Have questions about this package? Contact us directly.</p>
+            </div>
+            <div class="col-md-9">
+              <div class="row g-3">
+                @if($company_setting->company_name)
+                <div class="col-sm-6 col-lg-3">
+                  <div class="d-flex align-items-center p-3 rounded-3" style="background: #f8fafc; border: 1px solid #f1f5f9; height: 100%;">
+                    <span class="d-flex align-items-center justify-content-center bg-theme-color text-white rounded-circle me-3" style="width: 40px; height: 40px; min-width: 40px; font-size: 16px;">
+                      <i class="fa-solid fa-building"></i>
+                    </span>
+                    <div style="min-width: 0;">
+                      <small class="text-muted d-block" style="font-size: 10px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Agency</small>
+                      <span class="fw-bold text-title-color text-truncate d-block" style="font-size: 14px; color: #1e293b;">{{ $company_setting->company_name }}</span>
                     </div>
                   </div>
-                  <div class="body">
-                    <ul class="custom-ul">
-                      <li><i class="fa-solid fa-badge-check text-theme-color me-2"></i>Best Price Guaranteed</li>
-                      <li><i class="fa-solid fa-badge-check text-theme-color me-2"></i>Secure Booking Guaranteed</li>
-                      <li><i class="fa-solid fa-badge-check text-theme-color me-2"></i>Professional Local Guides</li>
-                    </ul>
-                  </div>
-                  <div class="footer pt-3">
-                    <a href="{{ url('contact?tour=' . urlencode($tour->slug)) }}" class="vs-btn style9 w-100 text-center text-uppercase">
-                      Book Now
-                    </a>
-                  </div>
                 </div>
+                @endif
+
+                @if($company_setting->phone)
+                <div class="col-sm-6 col-lg-3">
+                  <a href="tel:{{ $company_setting->phone }}" class="d-flex align-items-center p-3 rounded-3 hover-shadow-sm text-decoration-none" style="background: #f8fafc; border: 1px solid #f1f5f9; height: 100%; transition: all 0.2s;">
+                    <span class="d-flex align-items-center justify-content-center bg-theme-color text-white rounded-circle me-3" style="width: 40px; height: 40px; min-width: 40px; font-size: 16px;">
+                      <i class="fa-solid fa-phone"></i>
+                    </span>
+                    <div style="min-width: 0;">
+                      <small class="text-muted d-block" style="font-size: 10px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Call Us</small>
+                      <span class="fw-bold text-title-color text-truncate d-block" style="font-size: 14px; color: #1e293b;">{{ $company_setting->phone }}</span>
+                    </div>
+                  </a>
+                </div>
+                @endif
+
+                @if($company_setting->whatsapp)
+                <div class="col-sm-6 col-lg-3">
+                  <a href="https://wa.me/{{ $company_setting->whatsapp }}" target="_blank" class="d-flex align-items-center p-3 rounded-3 hover-shadow-sm text-decoration-none" style="background: #f8fafc; border: 1px solid #f1f5f9; height: 100%; transition: all 0.2s;">
+                    <span class="d-flex align-items-center justify-content-center text-white rounded-circle me-3" style="width: 40px; height: 40px; min-width: 40px; font-size: 18px; background-color: #25D366 !important; color: #ffffff !important;">
+                      <i class="fa-brands fa-whatsapp"></i>
+                    </span>
+                    <div style="min-width: 0;">
+                      <small class="text-muted d-block" style="font-size: 10px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">WhatsApp</small>
+                      <span class="fw-bold text-title-color text-truncate d-block" style="font-size: 14px; color: #1e293b;">{{ $company_setting->whatsapp }}</span>
+                    </div>
+                  </a>
+                </div>
+                @endif
+
+                @if($company_setting->company_email)
+                <div class="col-sm-6 col-lg-3">
+                  <a href="mailto:{{ $company_setting->company_email }}" class="d-flex align-items-center p-3 rounded-3 hover-shadow-sm text-decoration-none" style="background: #f8fafc; border: 1px solid #f1f5f9; height: 100%; transition: all 0.2s;">
+                    <span class="d-flex align-items-center justify-content-center bg-theme-color text-white rounded-circle me-3" style="width: 40px; height: 40px; min-width: 40px; font-size: 16px;">
+                      <i class="fa-solid fa-envelope"></i>
+                    </span>
+                    <div style="min-width: 0;">
+                      <small class="text-muted d-block" style="font-size: 10px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Email Us</small>
+                      <span class="fw-bold text-title-color text-truncate d-block" style="font-size: 14px; color: #1e293b;">{{ $company_setting->company_email }}</span>
+                    </div>
+                  </a>
+                </div>
+                @endif
               </div>
             </div>
           </div>
-
-          <!-- Company details widget -->
-          <div class="widget widget_trip" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); background: #fff; padding: 25px;">
-            <h4 class="widget_title border-bottom pb-2 mb-3" style="font-size: 18px; font-weight: 700;"><i class="fa-solid fa-building me-2 text-theme-color"></i>Company Contacts</h4>
-            <div class="d-flex flex-column gap-3">
-              @if($company_setting->company_name)
-              <div class="d-flex align-items-center">
-                <span class="d-flex align-items-center justify-content-center bg-light text-theme-color rounded-circle me-3" style="width: 36px; height: 36px;"><i class="fa-solid fa-info"></i></span>
-                <div>
-                  <small class="text-muted d-block" style="font-size: 11px; text-transform: uppercase;">Agency</small>
-                  <span class="fw-semibold text-title-color" style="font-size: 14px;">{{ $company_setting->company_name }}</span>
-                </div>
-              </div>
-              @endif
-
-              @if($company_setting->phone)
-              <div class="d-flex align-items-center">
-                <span class="d-flex align-items-center justify-content-center bg-light text-theme-color rounded-circle me-3" style="width: 36px; height: 36px;"><i class="fa-solid fa-phone"></i></span>
-                <div>
-                  <small class="text-muted d-block" style="font-size: 11px; text-transform: uppercase;">Call Us</small>
-                  <a href="tel:{{ $company_setting->phone }}" class="fw-semibold text-title-color hover-theme" style="font-size: 14px;">{{ $company_setting->phone }}</a>
-                </div>
-              </div>
-              @endif
-
-              @if($company_setting->whatsapp)
-              <div class="d-flex align-items-center">
-                <span class="d-flex align-items-center justify-content-center bg-light text-success rounded-circle me-3" style="width: 36px; height: 36px;"><i class="fa-brands fa-whatsapp" style="font-size: 18px;"></i></span>
-                <div>
-                  <small class="text-muted d-block" style="font-size: 11px; text-transform: uppercase;">WhatsApp</small>
-                  <a href="https://wa.me/{{ $company_setting->whatsapp }}" target="_blank" class="fw-semibold text-title-color hover-theme" style="font-size: 14px;">{{ $company_setting->whatsapp }}</a>
-                </div>
-              </div>
-              @endif
-
-              @if($company_setting->company_email)
-              <div class="d-flex align-items-center">
-                <span class="d-flex align-items-center justify-content-center bg-light text-theme-color rounded-circle me-3" style="width: 36px; height: 36px;"><i class="fa-solid fa-envelope"></i></span>
-                <div>
-                  <small class="text-muted d-block" style="font-size: 11px; text-transform: uppercase;">Email</small>
-                  <a href="mailto:{{ $company_setting->company_email }}" class="fw-semibold text-title-color hover-theme" style="font-size: 14px;">{{ $company_setting->company_email }}</a>
-                </div>
-              </div>
-              @endif
-            </div>
-          </div>
-
         </div>
       </div>
 
@@ -834,7 +968,7 @@
     </a>
     @endif
 
-    <a href="{{ url('contact?tour=' . urlencode($tour->slug)) }}" class="bottom-btn btn-enquire">
+    <a href="{{ url('enquiry?tour=' . urlencode($tour->slug)) }}" class="bottom-btn btn-enquire">
       <i class="fa fa-paper-plane"></i> Enquire
     </a>
 
@@ -909,7 +1043,7 @@
       </div>
     </div>
 
-    <a href="{{ url('contact?tour=' . urlencode($tour->slug) . '&trip_type=family') }}" id="popup-cta-btn" class="vs-btn style4 w-100 py-3 mt-2 text-center text-white" style="display: block; box-shadow: 0 4px 15px rgba(247,146,31,0.3); transition: all 0.3s;">Get a FREE Holiday Plan</a>
+    <a href="{{ url('enquiry?tour=' . urlencode($tour->slug) . '&trip_type=family') }}" id="popup-cta-btn" class="vs-btn style4 w-100 py-3 mt-2 text-center text-white" style="display: block; box-shadow: 0 4px 15px rgba(247,146,31,0.3); transition: all 0.3s;">Get a FREE Holiday Plan</a>
   </div>
 </div>
 
@@ -977,7 +1111,7 @@
 
     const ctaBtn = document.getElementById('popup-cta-btn');
     if (ctaBtn) {
-      const baseUrl = "{{ url('contact?tour=' . urlencode($tour->slug)) }}";
+      const baseUrl = "{{ url('enquiry?tour=' . urlencode($tour->slug)) }}";
       ctaBtn.href = `${baseUrl}&trip_type=${selectedType}`;
     }
   }

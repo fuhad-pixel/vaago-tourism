@@ -88,7 +88,7 @@
                 ></rect>
               </svg>
               <div class="logo d-none d-sm-block">
-                <a href="{{ url('/contact') }}" class="vs-btn style10">
+                <a href="{{ url('/enquiry') }}" class="vs-btn style10">
                   <span>let’s plan</span>
                 </a>
               </div>
@@ -323,7 +323,7 @@
                     fill-opacity="0.7"
                   />
                 </svg>
-                <a href="{{ url('/contact') }}" class="vs-btn style8">
+                <a href="{{ url('/enquiry') }}" class="vs-btn style8">
                   <span>let’s plan</span>
                 </a>
               </div>

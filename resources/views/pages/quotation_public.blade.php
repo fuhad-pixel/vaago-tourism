@@ -826,6 +826,7 @@
             gap: 30px;
             margin-top: 40px;
             width: 100%;
+            align-items: start;
         }
 
         @media (max-width: 992px) {
@@ -1327,6 +1328,10 @@
                             <span>{{ $quotation->quotation_code }}</span>
                         </div>
                     @endif
+                    <div class="q-stat-pill">
+                        <i class="fa-regular fa-calendar-plus"></i>
+                        <span>Created: {{ $quotation->created_at->format('M d, Y') }}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1496,6 +1501,8 @@
                                             @endif
                                         </div>
                                     </div>
+                                    {{-- Commented out View Details button per user request --}}
+                                    {{--
                                     <div class="q-hotel-btn-wrapper">
                                         @if($hotel && $hotel->contact_person)
                                             <span class="q-hotel-btn" title="Coordinator: {{ $hotel->contact_person }}">View Details</span>
@@ -1503,6 +1510,7 @@
                                             <span class="q-hotel-btn">View Details</span>
                                         @endif
                                     </div>
+                                    --}}
                                 </div>
                             @endif
 
@@ -1632,8 +1640,10 @@
         @endphp
         <div class="q-billing-summary-grid">
             
-            <!-- Left Card: Pricing & Booking Details -->
-            <div class="q-pricing-details-card">
+            <!-- Left Column: Pricing & Terms -->
+            <div class="q-billing-left-column">
+                <!-- Left Card: Pricing & Booking Details -->
+                <div class="q-pricing-details-card">
                 <div class="q-pricing-card-header">
                     <span class="q-pricing-card-title">Pricing & Booking Details</span>
                     <span class="q-pricing-code-badge">
@@ -1652,6 +1662,8 @@
                         </div>
                     </div>
 
+                    {{-- Commented out other booking and pricing details per user request --}}
+                    {{--
                     <div class="q-billing-row">
                         <div class="q-billing-row-left">
                             <i class="fa-solid fa-bed"></i>
@@ -1727,6 +1739,7 @@
                             {{ $quotation->currency == 'USD' ? '$' : '₹' }}{{ number_format($quotation->gst_amount, 2) }}
                         </div>
                     </div>
+                    --}}
                 </div>
 
                 <div class="q-billing-grand-total-block">
@@ -1750,6 +1763,19 @@
                 <div class="q-pricing-footer-hint">
                     <i class="fa-solid fa-info-circle"></i> Prices are subject to availability at the time of final booking confirmation.
                 </div>
+            </div>
+
+            @if(!empty($quotation->terms_and_conditions))
+                <!-- Terms & Conditions Section -->
+                <div class="q-terms-card" style="margin-top: 30px;">
+                    <h3>
+                        <i class="fa-solid fa-file-contract"></i> Terms & Conditions
+                    </h3>
+                    <div class="q-terms-content">
+                        {!! $quotation->terms_and_conditions !!}
+                    </div>
+                </div>
+            @endif
             </div>
 
             <!-- Right Card: Trip Summary -->
@@ -1814,18 +1840,6 @@
         </div>
 
     </div>
-
-        @if(!empty($quotation->terms_and_conditions))
-            <!-- Terms & Conditions Section -->
-            <div class="q-terms-card">
-                <h3>
-                    <i class="fa-solid fa-file-contract"></i> Terms & Conditions
-                </h3>
-                <div class="q-terms-content">
-                    {!! $quotation->terms_and_conditions !!}
-                </div>
-            </div>
-        @endif
 
     </div>
 

@@ -118,6 +118,15 @@ class SiteController extends Controller
         return view('pages.contact', compact('tour', 'hero_setting'));
     }
 
+    public function enquiry(Request $request) {
+        $tour = null;
+        if ($request->has('tour')) {
+            $tour = \App\Models\Tour::where('status', 1)->where('slug', $request->query('tour'))->first();
+        }
+        $hero_setting = \App\Models\HeroSetting::where('page_name', 'contact')->first();
+        return view('pages.enquiry', compact('tour', 'hero_setting'));
+    }
+
     public function ajaxSearch(Request $request) {
         $q = $request->query('q');
         if (!$q) {

@@ -10,7 +10,7 @@ class Tour extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'tour_code', 'name', 'slug', 'overview', 'inclusions', 'exclusions', 'category_id', 'destination_id',
+        'tour_code', 'name', 'slug', 'overview', 'inclusions', 'exclusions', 'terms_and_conditions', 'category_id', 'destination_id',
         'original_price', 'discount_price', 'price_type',
         'duration_days', 'duration_nights', 'duration_hours', 'duration_minutes', 'min_guests', 'max_guests',
         'additional_inclusions', 'related_tours', 'status'

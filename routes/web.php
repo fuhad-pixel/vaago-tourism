@@ -95,6 +95,14 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Destinations
     Route::resource('/admin/destinations', \App\Http\Controllers\Admin\DestinationController::class)->except(['show'])->middleware('can:manage_destinations');
+    
+    // Parent Destinations
+    Route::middleware('can:manage_destinations')->group(function () {
+        Route::post('/admin/parent-destinations', [\App\Http\Controllers\Admin\DestinationController::class, 'storeParent'])->name('parent-destinations.store');
+        Route::get('/admin/parent-destinations/{parentDestination}/edit', [\App\Http\Controllers\Admin\DestinationController::class, 'editParent'])->name('parent-destinations.edit');
+        Route::put('/admin/parent-destinations/{parentDestination}', [\App\Http\Controllers\Admin\DestinationController::class, 'updateParent'])->name('parent-destinations.update');
+        Route::delete('/admin/parent-destinations/{parentDestination}', [\App\Http\Controllers\Admin\DestinationController::class, 'destroyParent'])->name('parent-destinations.destroy');
+    });
 
     // Travel Guides
     Route::middleware('can:manage_travel_guides')->group(function () {
@@ -153,6 +161,7 @@ Route::get('/blog', [SiteController::class, 'blog']);
 Route::get('/blog-single/{slug}', [SiteController::class, 'blogSingle']);
 Route::get('/tour/{slug}', [SiteController::class, 'tourDetail']);
 Route::get('/contact', [SiteController::class, 'contact']);
+Route::get('/enquiry', [SiteController::class, 'enquiry']);
 Route::post('/enquiry/submit', [\App\Http\Controllers\EnquiryController::class, 'submit']);
 Route::get('/ajax-search', [SiteController::class, 'ajaxSearch'])->name('ajax.search');
 

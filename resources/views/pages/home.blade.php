@@ -1,6 +1,40 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+  /* Home Tour Package Card Title & Location Tweaks */
+  .tour-package-box .title,
+  .tour-package-box .title a {
+    font-family: var(--body-font), sans-serif !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.2px !important;
+  }
+  .tour-package-box .package-location {
+    display: block !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    width: 100% !important;
+  }
+  /* Fix cropping and alignment of icons in tour list card */
+  .tour-package-box .package-info span i {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: middle !important;
+    width: 1.25em !important;
+    height: 1.25em !important;
+    margin-right: 6px !important;
+    line-height: 1 !important;
+    font-size: 14px !important;
+  }
+  .tour-package-box .package-info span {
+    display: inline-flex !important;
+    align-items: center !important;
+    font-size: 14px !important;
+    vertical-align: middle !important;
+  }
+</style>
       <!--================= Hero Area =================-->
       <section class="z-index-common hero-layout1 overflow-clip p-0" style="position: relative; min-height: 100vh;">
         <!-- Swiper Background and Text Slider -->
@@ -113,39 +147,141 @@
 
       <!--================= Destination Area start =================-->
       <style>
-        @media (min-width: 992px) {
-            /* Smooth transition for the text appearing/disappearing */
-            .destination-box .destination-content .info {
-                transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
-            }
-            
-            /* Hide info by default for non-active cards when wrapper is not hovered */
-            .destination-box-wrapper:not(:hover) .destination-box:not(.active) .destination-content .info {
-                opacity: 0;
-                visibility: hidden;
-                transform: translateY(15px);
-            }
-            
-            /* When wrapper is hovered, hide info for ALL cards */
-            .destination-box-wrapper:hover .destination-box .destination-content .info {
-                opacity: 0;
-                visibility: hidden;
-                transform: translateY(15px);
-            }
-            
-            /* But show info for the SPECIFIC card being hovered */
-            .destination-box-wrapper:hover .destination-box:hover .destination-content .info {
-                opacity: 1;
-                visibility: visible;
-                transform: translateY(0);
-            }
-            
-            /* Ensure the active card shows info when wrapper is not hovered */
-            .destination-box-wrapper:not(:hover) .destination-box.active .destination-content .info {
-                opacity: 1;
-                visibility: visible;
-                transform: translateY(0);
-            }
+        /* Static Destination Cards Grid and Slider */
+        .destination-swiper {
+          padding: 10px 5px 30px 5px !important;
+          overflow: hidden !important;
+        }
+        .destination-swiper .swiper-slide {
+          height: auto;
+        }
+        .destination-box.style-static {
+          width: 100% !important;
+          max-width: 100% !important;
+          flex: none !important;
+          display: block !important;
+          border-radius: 24px !important;
+          overflow: hidden !important;
+          position: relative !important;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.06) !important;
+          transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+        }
+        .destination-box.style-static:hover {
+          transform: translateY(-5px) !important;
+          box-shadow: 0 15px 35px rgba(0,0,0,0.12) !important;
+        }
+        .destination-box.style-static .destination-thumb {
+          height: 380px !important;
+          border-radius: 24px !important;
+          overflow: hidden !important;
+          position: relative !important;
+        }
+        .destination-box.style-static .destination-thumb img {
+          transition: transform 0.6s ease !important;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .destination-box.style-static:hover .destination-thumb img {
+          transform: scale(1.06) !important;
+        }
+        /* Dark vignette overlay for contrast */
+        .destination-box.style-static .destination-thumb::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 100%) !important;
+          z-index: 1;
+          pointer-events: none;
+        }
+        
+        .destination-box.style-static .destination-content {
+          position: absolute !important;
+          bottom: 0 !important;
+          left: 0 !important;
+          width: 100% !important;
+          padding: 24px !important;
+          z-index: 2 !important;
+          background: transparent !important;
+          
+          /* Force left-aligned flex structure side-by-side */
+          display: flex !important;
+          align-items: flex-end !important;
+          justify-content: space-between !important;
+          text-align: left !important;
+        }
+        .destination-box .destination-content .info,
+        .destination-box.style-static .destination-content .info {
+          opacity: 1 !important;
+          visibility: visible !important;
+          transform: translateY(0) !important;
+          transition: none !important;
+          text-align: left !important;
+          flex-grow: 1 !important;
+          margin-right: 15px !important;
+          width: auto !important;
+          flex-shrink: 1 !important;
+        }
+        .destination-box.style-static .destination-content .info h4 {
+          margin-bottom: 4px !important;
+          font-size: 20px !important;
+          font-weight: 700 !important;
+          color: #ffffff !important;
+          text-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+          text-align: left !important;
+        }
+        .destination-box.style-static .destination-content .info h4 a {
+          text-align: left !important;
+        }
+        .destination-box.style-static .destination-content .info span {
+          font-size: 14px !important;
+          font-weight: 500 !important;
+          color: #22d3ee !important; /* Vibrant cyan for high contrast */
+          text-shadow: 0 1px 2px rgba(0,0,0,0.3) !important;
+          text-align: left !important;
+          display: block !important;
+        }
+        
+        /* Force location button icon visibility and alignment initially */
+        .destination-box .destination-content .icon,
+        .destination-box .destination-content a.icon,
+        .destination-box .destination-content > a,
+        body .vs-destination-style1 .destination-swiper div.destination-box.style-static div.destination-content a.icon,
+        body .vs-destination-style1 .destination-swiper div.destination-box.style-static div.destination-content .icon,
+        body .destination-box.style-static .destination-content a.icon,
+        body .destination-box.style-static .destination-content .icon,
+        body .destination-box.style-static .destination-content > a,
+        .destination-swiper .destination-box.style-static .destination-content a.icon,
+        .destination-swiper .destination-box.style-static .destination-content .icon {
+          width: 44px !important;
+          height: 44px !important;
+          min-width: 44px !important;
+          border-radius: 50% !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          background-color: var(--theme-color) !important;
+          color: #ffffff !important;
+          
+          /* Forced visibility variables */
+          opacity: 1 !important;
+          visibility: visible !important;
+          transform: scale(1) translateY(0) !important;
+          z-index: 10 !important;
+          pointer-events: auto !important;
+          position: relative !important;
+          margin-bottom: 0 !important;
+          margin-right: 0 !important;
+          transition: transform 0.3s ease, background-color 0.3s ease !important;
+        }
+        .destination-box.style-static:hover .destination-content a.icon,
+        .destination-box.style-static:hover .destination-content .icon,
+        .destination-box.style-static:hover .destination-content > a {
+          transform: scale(1.1) translateY(0) !important;
+          margin-right: 0 !important;
         }
       </style>
       <section
@@ -176,30 +312,32 @@
           <div class="row">
             <div class="col-12">
               @if($destinations->count() > 0)
-                <div class="destination-box-wrapper">
-                  @foreach($destinations->take(4) as $destination)
-                    <div class="destination-box @if($loop->first) active @endif" style="cursor: pointer;" onclick="window.location='{{ url('tours?destination_id=' . encrypt($destination->id)) }}'">
-                      <div class="destination-thumb" style="height: 420px;">
-                        <img
-                          src="{{ asset($destination->image) }}"
-                          alt="{{ $destination->name }}"
-                          class="w-100"
-                          style="height: 100%; object-fit: cover;"
-                        />
-                      </div>
-                      <div class="destination-content">
-                        <div class="info">
-                          <h4 class="text-white text-capitalize">
-                            <a href="{{ url('tours?destination_id=' . encrypt($destination->id)) }}" onclick="event.stopPropagation();">{{ $destination->name }}</a>
-                          </h4>
-                          <span class="text-theme-color d-block">{{ $destination->tours_count }} {{ Str::plural('Tour', $destination->tours_count) }}</span>
+                <div class="swiper destination-swiper">
+                  <div class="swiper-wrapper">
+                    @foreach($destinations as $destination)
+                      <div class="swiper-slide">
+                        <div class="destination-box style-static" style="cursor: pointer;" onclick="window.location='{{ url('tours?destination_id=' . encrypt($destination->id)) }}'">
+                          <div class="destination-thumb">
+                            <img
+                              src="{{ asset($destination->image) }}"
+                              alt="{{ $destination->name }}"
+                            />
+                          </div>
+                          <div class="destination-content">
+                            <div class="info">
+                              <h4 class="text-white text-capitalize">
+                                <a href="{{ url('tours?destination_id=' . encrypt($destination->id)) }}" onclick="event.stopPropagation();">{{ $destination->name }}</a>
+                              </h4>
+                              <span>{{ $destination->tours_count }} {{ Str::plural('Tour', $destination->tours_count) }}</span>
+                            </div>
+                            <a href="{{ url('tours?destination_id=' . encrypt($destination->id)) }}" class="icon bg-theme-color text-white-color" onclick="event.stopPropagation();">
+                              <i class="fa-solid fa-location-dot"></i>
+                            </a>
+                          </div>
                         </div>
-                        <a href="{{ url('tours?destination_id=' . encrypt($destination->id)) }}" class="icon bg-theme-color text-white-color" onclick="event.stopPropagation();">
-                          <i class="fa-solid fa-location-dot"></i>
-                        </a>
                       </div>
-                    </div>
-                  @endforeach
+                    @endforeach
+                  </div>
                 </div>
               @else
                 <div class="text-center py-5" style="background: rgba(255,255,255,0.8); border-radius: 10px;">
@@ -290,12 +428,12 @@
                             <div class="pricing-container">
                               <div class="package-info">
                                 <span class="package-location">
-                                  <i class="fa-sharp fa-thin fa-location-dot"></i>
+                                  <i class="fa-solid fa-location-dot"></i>
                                   {{ $tour->destinations->pluck('name')->implode(', ') }}
                                 </span>
                                 @if($tour->duration_days > 0 || $tour->duration_nights > 0)
                                   <span class="package-time">
-                                    <i class="fa-sharp fa-thin fa-clock"></i>
+                                    <i class="fa-regular fa-clock"></i>
                                     @if($tour->duration_days > 0)
                                       {{ $tour->duration_days }} {{ Str::plural('Day', $tour->duration_days) }}
                                     @endif
@@ -1068,6 +1206,27 @@
                 el: '.hero-swiper-pagination',
                 clickable: true,
               },
+            });
+
+            const destinationSwiper = new Swiper('.destination-swiper', {
+              slidesPerView: 1,
+              spaceBetween: 24,
+              loop: true,
+              autoplay: {
+                delay: 4000,
+                disableOnInteraction: false,
+              },
+              breakpoints: {
+                576: {
+                  slidesPerView: 2,
+                },
+                992: {
+                  slidesPerView: 3,
+                },
+                1200: {
+                  slidesPerView: 3,
+                }
+              }
             });
           }
         });

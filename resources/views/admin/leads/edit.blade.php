@@ -45,7 +45,12 @@
 
                     <div class="form-group">
                         <label for="country">Country</label>
-                        <input type="text" name="country" id="country" class="modern-input" placeholder="Enter country" value="{{ old('country', $lead->country) }}">
+                        <select name="country" id="country" class="modern-input select2-country">
+                            <option value="">-- Select Country --</option>
+                            @foreach($countries as $c)
+                                <option value="{{ $c->name }}" data-flag="{{ $c->flag }}" {{ old('country', $lead->country) == $c->name ? 'selected' : '' }}>{{ $c->name }}</option>
+                            @endforeach
+                        </select>
                         @error('country')<span class="text-danger" style="font-size: 0.85rem;">{{ $message }}</span>@enderror
                     </div>
                     
@@ -145,4 +150,31 @@
         </form>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    $(document).ready(function() {
+        function formatCountry(country) {
+            if (!country.id) {
+                return country.text;
+            }
+            var flagUrl = $(country.element).data('flag');
+            if (flagUrl) {
+                var $country = $(
+                    '<span><img src="' + flagUrl + '" class="img-flag" style="width: 20px; height: 15px; margin-right: 8px; object-fit: cover; border-radius: 2px;" /> ' + country.text + '</span>'
+                );
+                return $country;
+            }
+            return country.text;
+        }
+
+        $('.select2-country').select2({
+            templateResult: formatCountry,
+            templateSelection: formatCountry,
+            width: '100%',
+            placeholder: '-- Select Country --'
+        });
+    });
+</script>
 @endsection

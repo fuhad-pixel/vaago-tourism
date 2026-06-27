@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Destination;
+use App\Models\ParentDestination;
 use Illuminate\Support\Facades\File;
 
 class DestinationService
@@ -13,6 +14,14 @@ class DestinationService
     public function getAllDestinations()
     {
         return Destination::latest()->get();
+    }
+
+    /**
+     * Get all parent destinations.
+     */
+    public function getAllParentDestinations()
+    {
+        return ParentDestination::latest()->get();
     }
 
     /**
@@ -29,6 +38,7 @@ class DestinationService
             'name' => $data['name'],
             'description' => $data['description'] ?? null,
             'image' => $imagePath,
+            'parent_destination_id' => $data['parent_destination_id'] ?? null,
         ]);
     }
 
@@ -36,6 +46,53 @@ class DestinationService
      * Update an existing destination.
      */
     public function updateDestination(Destination $destination, array $data): Destination
+    {
+        $updateData = [
+            'name' => $data['name'],
+            'description' => $data['description'] ?? null,
+            'parent_destination_id' => $data['parent_destination_id'] ?? null,
+        ];
+
+        if (isset($data['image']) && $data['image']->isValid()) {
+            // Delete old image if it exists
+            $this->deleteImageFile($destination->image);
+            $updateData['image'] = $this->uploadImage($data['image']);
+        }
+
+        $destination->update($updateData);
+
+        return $destination;
+    }
+
+    /**
+     * Soft delete a destination.
+     */
+    public function deleteDestination(Destination $destination): bool
+    {
+        return $destination->delete();
+    }
+
+    /**
+     * Create a new parent destination.
+     */
+    public function createParentDestination(array $data): ParentDestination
+    {
+        $imagePath = null;
+        if (isset($data['image']) && $data['image']->isValid()) {
+            $imagePath = $this->uploadImage($data['image']);
+        }
+
+        return ParentDestination::create([
+            'name' => $data['name'],
+            'description' => $data['description'] ?? null,
+            'image' => $imagePath,
+        ]);
+    }
+
+    /**
+     * Update an existing parent destination.
+     */
+    public function updateParentDestination(ParentDestination $destination, array $data): ParentDestination
     {
         $updateData = [
             'name' => $data['name'],
@@ -54,9 +111,9 @@ class DestinationService
     }
 
     /**
-     * Soft delete a destination.
+     * Soft delete a parent destination.
      */
-    public function deleteDestination(Destination $destination): bool
+    public function deleteParentDestination(ParentDestination $destination): bool
     {
         return $destination->delete();
     }

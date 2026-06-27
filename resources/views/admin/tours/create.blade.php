@@ -52,6 +52,11 @@
                         <textarea name="exclusions" id="exclusions" class="modern-input ckeditor-init" rows="5">{{ old('exclusions') }}</textarea>
                     </div>
 
+                    <div class="form-group">
+                        <label for="terms_and_conditions">Terms & Conditions</label>
+                        <textarea name="terms_and_conditions" id="terms_and_conditions" class="modern-input ckeditor-init" rows="5">{{ old('terms_and_conditions') }}</textarea>
+                    </div>
+
 
 
                     <h4 class="form-section-title" style="margin-top: 24px;"><i class="fa-solid fa-folder-plus"></i> Additional Inclusions</h4>

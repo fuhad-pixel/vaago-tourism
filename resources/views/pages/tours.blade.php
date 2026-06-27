@@ -8,12 +8,12 @@
         }
         @media (max-width: 991px) {
           .vs-breadcrumb {
-            padding: 180px 0 100px !important;
+            padding: 180px 0 250px !important;
           }
         }
         @media (max-width: 767px) {
           .vs-breadcrumb {
-            padding: 140px 0 80px !important;
+            padding: 140px 0 220px !important;
           }
         }
 
@@ -57,7 +57,15 @@
           }
           .premium-filter-card {
             padding: 24px;
-            margin-top: -40px;
+          }
+        }
+
+        @media (max-width: 991px) {
+          .premium-filter-container {
+            margin-top: -60px !important;
+          }
+          .premium-filter-card {
+            margin-top: 0px !important;
           }
         }
 
@@ -251,8 +259,10 @@
         }
 
         .premium-card-title {
-          font-size: 18px;
-          font-weight: 800;
+          font-family: var(--body-font), sans-serif !important;
+          font-size: 18px !important;
+          font-weight: 600 !important;
+          letter-spacing: -0.2px !important;
           color: #0f172a;
           line-height: 1.4;
           margin-bottom: 16px;
@@ -264,6 +274,8 @@
         }
 
         .premium-card-title a {
+          font-family: var(--body-font), sans-serif !important;
+          font-weight: 600 !important;
           color: inherit;
           text-decoration: none;
           transition: color 0.3s ease;

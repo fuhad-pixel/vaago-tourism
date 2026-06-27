@@ -33,7 +33,8 @@ class LeadController extends Controller
     {
         $users = User::all();
         $statuses = ['New', 'Contacted', 'Proposal Sent', 'Negotiating', 'Confirmed', 'Cancelled', 'Lost'];
-        return view('admin.leads.create', compact('users', 'statuses'));
+        $countries = \App\Models\Country::all();
+        return view('admin.leads.create', compact('users', 'statuses', 'countries'));
     }
 
     /**
@@ -70,7 +71,8 @@ class LeadController extends Controller
     {
         $users = User::all();
         $statuses = ['New', 'Contacted', 'Proposal Sent', 'Negotiating', 'Confirmed', 'Cancelled', 'Lost'];
-        return view('admin.leads.edit', compact('lead', 'users', 'statuses'));
+        $countries = \App\Models\Country::all();
+        return view('admin.leads.edit', compact('lead', 'users', 'statuses', 'countries'));
     }
 
     /**

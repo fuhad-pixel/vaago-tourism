@@ -302,7 +302,7 @@
                         <select id="input-lead-id" class="q-select">
                             <option value="">-- Choose Lead --</option>
                             @foreach($leads as $lead)
-                                <option value="{{ $lead->id }}">{{ $lead->name }} ({{ $lead->email }})</option>
+                                <option value="{{ $lead->id }}" data-adults="{{ $lead->adults ?? 0 }}" data-children="{{ $lead->children ?? 0 }}" data-infants="{{ $lead->infants ?? 0 }}">{{ $lead->name }} ({{ $lead->email }})</option>
                             @endforeach
                         </select>
                     </div>
@@ -2179,5 +2179,21 @@
             </div>
         `;
     }
+
+    // Auto-fill global pax count based on selected lead
+    $(document).ready(function() {
+        $('#input-lead-id').on('change', function() {
+            var $option = $(this).find('option:selected');
+            if ($option.val()) {
+                $('#input-global-adults').val($option.data('adults') || 0);
+                $('#input-global-children').val($option.data('children') || 0);
+                $('#input-global-infants').val($option.data('infants') || 0);
+                
+                if (typeof saveDraftToLocalStorage === 'function') {
+                    saveDraftToLocalStorage();
+                }
+            }
+        });
+    });
 </script>
 @endsection

@@ -14,7 +14,13 @@ class Destination extends Model
         'name',
         'description',
         'image',
+        'parent_destination_id',
     ];
+
+    public function parentDestination()
+    {
+        return $this->belongsTo(ParentDestination::class);
+    }
 
     public function tours()
     {

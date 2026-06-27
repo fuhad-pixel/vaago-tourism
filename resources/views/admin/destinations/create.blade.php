@@ -8,7 +8,7 @@
 <div class="admin-page-panel">
     <div class="page-panel-header">
         <div class="panel-header-action-container">
-            <h3><i class="fa-solid fa-plus"></i> Add New Destination</h3>
+            <h3><i class="fa-solid fa-plus"></i> {{ $isParent ? 'Add New Parent Destination' : 'Add New Destination' }}</h3>
             <a href="{{ url('/admin/destinations') }}" class="btn-add-new">
                 <i class="fa-solid fa-arrow-left-long"></i> Back to Destinations
             </a>
@@ -16,13 +16,28 @@
     </div>
     
     <div class="page-panel-body">
-        <form action="{{ url('/admin/destinations') }}" method="POST" enctype="multipart/form-data" class="validate-form">
+        <form action="{{ $isParent ? url('/admin/parent-destinations') : url('/admin/destinations') }}" method="POST" enctype="multipart/form-data" class="validate-form">
             @csrf
             
             <div class="form-section-grid">
                 <!-- Left Side: Basic Info -->
                 <div>
-                    <h4 class="form-section-title"><i class="fa-solid fa-circle-info"></i> Destination Details</h4>
+                    <h4 class="form-section-title"><i class="fa-solid fa-circle-info"></i> {{ $isParent ? 'Parent Destination Details' : 'Destination Details' }}</h4>
+                    
+                    @if(!$isParent)
+                    <div class="form-group">
+                        <label for="parent_destination_id">Parent Destination</label>
+                        <select name="parent_destination_id" id="parent_destination_id" class="modern-input select2">
+                            <option value="">-- None --</option>
+                            @foreach($parentDestinations as $pDest)
+                                <option value="{{ $pDest->id }}" {{ old('parent_destination_id') == $pDest->id ? 'selected' : '' }}>{{ $pDest->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('parent_destination_id')
+                            <span class="text-danger" style="font-size: 0.85rem; margin-top: 4px; display: block;">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    @endif
                     
                     <div class="form-group">
                         <label for="name">Destination Name <span class="text-danger">*</span></label>
@@ -81,4 +96,13 @@
 
 @section('scripts')
     <script src="{{ asset('assets/js/admin/image-preview.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            if ($('.select2').length) {
+                $('.select2').select2({
+                    width: '100%'
+                });
+            }
+        });
+    </script>
 @endsection
