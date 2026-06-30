@@ -134,6 +134,29 @@ class TourService
         return $tour;
     }
 
+    public function updateTourSeo(Tour $tour, array $data, $ogImage = null)
+    {
+        $seoData = [
+            'meta_title' => $data['meta_title'] ?? null,
+            'meta_description' => $data['meta_description'] ?? null,
+            'meta_keywords' => $data['meta_keywords'] ?? null,
+            'og_title' => $data['og_title'] ?? null,
+            'og_description' => $data['og_description'] ?? null,
+        ];
+
+        if ($ogImage && $ogImage->isValid()) {
+            $seoData['og_image_path'] = $this->uploadImage($ogImage);
+        }
+
+        if ($tour->seo) {
+            $tour->seo()->update($seoData);
+        } else {
+            $tour->seo()->create($seoData);
+        }
+
+        return $tour->seo;
+    }
+
     public function deleteTour(Tour $tour)
     {
         return $tour->delete();

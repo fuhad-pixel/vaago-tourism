@@ -71,4 +71,9 @@ class Tour extends Model
         }
         return self::whereIn('id', $this->related_tours)->get();
     }
+
+    public function seo()
+    {
+        return $this->morphOne(Seo::class, 'seoable');
+    }
 }

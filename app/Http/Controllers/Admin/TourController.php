@@ -141,6 +141,28 @@ class TourController extends Controller
         return redirect('/admin/tours')->with('success', 'Tour deleted successfully.');
     }
 
+    public function editSeo(Tour $tour)
+    {
+        $tour->load('seo');
+        return view('admin.tours.seo', compact('tour'));
+    }
+
+    public function updateSeo(Request $request, Tour $tour)
+    {
+        $validated = $request->validate([
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string',
+            'meta_keywords' => 'nullable|string',
+            'og_title' => 'nullable|string|max:255',
+            'og_description' => 'nullable|string',
+            'og_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
+        ]);
+
+        $this->tourService->updateTourSeo($tour, $validated, $request->file('og_image'));
+
+        return redirect('/admin/tours')->with('success', 'Tour SEO updated successfully.');
+    }
+
     public function deleteImage($id)
     {
         $image = \App\Models\TourImage::findOrFail($id);

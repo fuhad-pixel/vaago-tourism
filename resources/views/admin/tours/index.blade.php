@@ -103,6 +103,9 @@
                                         <input type="checkbox" class="status-toggle" data-id="{{ $tour->id }}" {{ $tour->status ? 'checked' : '' }}>
                                         <span class="slider"></span>
                                     </label>
+                                    <a href="{{ route('tours.seo.edit', $tour->id) }}" class="btn-table-action" style="color: #6366F1;" title="SEO Settings">
+                                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                                    </a>
                                     <a href="{{ url('/admin/tours/' . $tour->id . '/edit') }}" class="btn-table-action" title="Edit">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>

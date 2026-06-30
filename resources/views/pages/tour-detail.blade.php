@@ -1,6 +1,34 @@
 @extends('layouts.app')
 
+@if(isset($tour->seo) && $tour->seo->meta_title)
+@section('meta_title', $tour->seo->meta_title)
+@else
+@section('meta_title', $tour->name)
+@endif
+
+@if(isset($tour->seo) && $tour->seo->meta_description)
+@section('meta_description', $tour->seo->meta_description)
+@endif
+
+@if(isset($tour->seo) && $tour->seo->meta_keywords)
+@section('meta_keywords', $tour->seo->meta_keywords)
+@endif
+
+@if(isset($tour->seo) && $tour->seo->og_title)
+@section('og_title', $tour->seo->og_title)
+@endif
+
+@if(isset($tour->seo) && $tour->seo->og_description)
+@section('og_description', $tour->seo->og_description)
+@endif
+
+@if(isset($tour->seo) && $tour->seo->og_image_path)
+@section('og_image', asset($tour->seo->og_image_path))
+@elseif($tour->images->count() > 0)
+@section('og_image', asset($tour->images->first()->image_path))
+@endif
 @section('content')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
 <style>
   /* Styling for dynamic lists */
   .inc-list-styled ul,
@@ -363,11 +391,13 @@
   .vs-breadcrumb {
     padding: 240px 0 120px !important;
   }
+
   @media (max-width: 991px) {
     .vs-breadcrumb {
       padding: 200px 0 100px !important;
     }
   }
+
   @media (max-width: 767px) {
     .vs-breadcrumb {
       padding: 160px 0 80px !important;
@@ -375,29 +405,78 @@
   }
 
   /* Tour Detail page metadata customization */
+  .vs-destination-single .destination-single-px {
+    padding-top: 15px !important;
+  }
+  .vs-destination-single .destination-info-tabs {
+    margin-top: 15px !important;
+    padding-block: 15px !important;
+  }
+
+  .trip-info {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    gap: 15px !important;
+    margin-bottom: 20px !important;
+    padding-bottom: 0 !important;
+    border-bottom: none !important;
+  }
+  
+  .trip-info-box {
+    margin-bottom: 0 !important;
+    flex: 1 1 auto;
+    padding: 0 !important;
+    border: none !important;
+  }
+  
   .trip-info-destination-box {
-    grid-column: span 2;
+    grid-column: auto !important;
   }
+
+  .trip-info-box .header span {
+    font-size: 12px !important;
+  }
+
   .trip-info-box .info-title {
-    font-size: 14px !important;
-    font-weight: 500 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
     text-transform: none !important;
+    margin-top: 4px !important;
   }
-  @media (max-width: 424px) {
-    .trip-info-destination-box {
-      grid-column: span 1;
+  
+  .trip-info-box .header i, .trip-info-box .header svg {
+    font-size: 14px !important;
+  }
+
+  @media (max-width: 991px) {
+    .trip-info {
+      flex-wrap: wrap !important;
+    }
+    .trip-info-box {
+      flex: 0 0 calc(33.333% - 10px);
+      margin-bottom: 15px !important;
+    }
+  }
+
+  @media (max-width: 575px) {
+    .trip-info-box {
+      flex: 0 0 calc(50% - 10px);
     }
   }
 
   .hover-shadow-sm {
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
   .hover-shadow-sm:hover {
     border-color: rgba(0, 101, 108, 0.2) !important;
     background: #ffffff !important;
     box-shadow: 0 10px 25px -3px rgba(0, 101, 108, 0.08), 0 4px 6px -2px rgba(0, 101, 108, 0.04) !important;
     transform: translateY(-2px);
   }
+
   .company-contacts-card a small {
     color: #64748b !important;
   }
@@ -407,15 +486,17 @@
     display: grid;
     grid-template-columns: 1.2fr 0.8fr;
     gap: 16px;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
   }
+
   .tour-main-img-wrap,
   .tour-side-img-item {
     overflow: hidden;
     border-radius: 16px;
     position: relative;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   }
+
   .tour-main-img-wrap img,
   .tour-side-img-item img {
     width: 100%;
@@ -423,19 +504,22 @@
     object-fit: cover;
     transition: transform 0.5s ease;
   }
+
   .tour-main-img-wrap:hover img,
   .tour-side-img-item:hover img {
     transform: scale(1.04);
   }
-  
+
   @media (max-width: 768px) {
     .tour-image-grid {
       grid-template-columns: 1fr;
       gap: 12px;
     }
+
     .tour-main-img-wrap {
       height: 350px !important;
     }
+
     .tour-side-imgs-wrap {
       height: auto !important;
       grid-template-columns: 1fr 1fr;
@@ -443,10 +527,12 @@
       height: 180px !important;
     }
   }
+
   @media (max-width: 480px) {
     .tour-main-img-wrap {
       height: 250px !important;
     }
+
     .tour-side-imgs-wrap {
       height: 100px !important;
     }
@@ -456,6 +542,7 @@
   .vs-destination-details {
     padding-top: 50px !important;
   }
+
   @media (max-width: 767px) {
     .vs-destination-details {
       padding-top: 30px !important;
@@ -521,46 +608,184 @@
           <div class="destination-single-info">
             <!-- Dynamic Tour Image Grid -->
             @php
-              $tourImages = $tour->images;
-              $imageCount = $tourImages->count();
+            $tourImages = $tour->images;
+            $imageCount = $tourImages->count();
             @endphp
 
             @if($imageCount >= 3)
-              <div class="tour-image-grid">
-                <!-- Main Big Image -->
-                <div class="tour-main-img-wrap" id="main-tour-hero-img" style="height: 450px;">
+            <div class="row gy-4">
+              <div class="col-lg-8">
+                <div class="tour-image-grid" style="margin-top: 15px; margin-left: 15px; margin-right: 15px;">
+              <!-- Main Big Image -->
+              <div class="tour-main-img-wrap" id="main-tour-hero-img" style="height: 450px;">
+                <a href="{{ asset($tourImages[0]->image_path) }}" class="glightbox" data-gallery="tour-gallery">
                   <img src="{{ asset($tourImages[0]->image_path) }}" alt="{{ $tour->name }}" />
-                </div>
-                <!-- Right Side Small Images -->
-                <div class="tour-side-imgs-wrap" style="display: grid; grid-template-rows: 1fr 1fr; gap: 16px; height: 450px;">
-                  <div class="tour-side-img-item" style="height: 100%;">
+                </a>
+              </div>
+              <!-- Right Side Small Images -->
+              <div class="tour-side-imgs-wrap" style="display: grid; grid-template-rows: 1fr 1fr; gap: 16px; height: 450px;">
+                <div class="tour-side-img-item" style="height: 100%;">
+                  <a href="{{ asset($tourImages[1]->image_path) }}" class="glightbox" data-gallery="tour-gallery">
                     <img src="{{ asset($tourImages[1]->image_path) }}" alt="{{ $tour->name }}" />
-                  </div>
-                  <div class="tour-side-img-item" style="height: 100%;">
+                  </a>
+                </div>
+                <div class="tour-side-img-item" style="height: 100%;">
+                  <a href="{{ asset($tourImages[2]->image_path) }}" class="glightbox" data-gallery="tour-gallery">
                     <img src="{{ asset($tourImages[2]->image_path) }}" alt="{{ $tour->name }}" />
+                  </a>
+                </div>
+              </div>
+              </div>
+              </div>
+              
+              <!-- Booking Widget next to Image Grid -->
+              <div class="col-lg-4">
+                <div class="tour-booking-widget">
+                  <div class="widget-card d-flex flex-column" style="background: #f8fafc; padding: 35px 30px; margin-top: 20px; margin-right: 20px; margin-left: 15px;">
+                    
+                    <div style="text-align: center; margin-bottom: 12px;">
+                      <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--theme-color);">Adventure Awaits</span>
+                      <h4 style="font-size: 20px; font-weight: 800; color: #1e293b; margin-top: 6px; margin-bottom: 0;">Ready to Explore?</h4>
+                    </div>
+
+                    <a href="{{ url('/enquiry?tour_slug=' . $tour->slug) }}" class="vs-btn w-100 text-center" style="border-radius: 0; padding: 18px 20px; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0, 101, 108, 0.2); transition: all 0.3s ease;">
+                      Book Now <i class="fa-solid fa-arrow-right ms-2"></i>
+                    </a>
+
+                    <ul class="widget-features" style="list-style: none; padding: 0; margin: 0;">
+                      <li style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 101, 108, 0.1); display: flex; align-items: center; justify-content: center; color: var(--theme-color);">
+                          <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <span style="font-size: 14px; color: #334155; font-weight: 500;">Secure Booking</span>
+                      </li>
+                      <li style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 101, 108, 0.1); display: flex; align-items: center; justify-content: center; color: var(--theme-color);">
+                          <i class="fa-solid fa-headset"></i>
+                        </div>
+                        <span style="font-size: 14px; color: #334155; font-weight: 500;">24/7 Customer Support</span>
+                      </li>
+                      <li style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 101, 108, 0.1); display: flex; align-items: center; justify-content: center; color: var(--theme-color);">
+                          <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <span style="font-size: 14px; color: #334155; font-weight: 500;">Instant Confirmation</span>
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
+            </div>
             @elseif($imageCount == 2)
-              <div class="tour-image-grid">
-                <div class="tour-main-img-wrap" id="main-tour-hero-img" style="height: 450px;">
+            <div class="row gy-4">
+              <div class="col-lg-8">
+                <div class="tour-image-grid" style="margin-top: 15px; margin-left: 15px; margin-right: 15px;">
+              <div class="tour-main-img-wrap" id="main-tour-hero-img" style="height: 450px;">
+                <a href="{{ asset($tourImages[0]->image_path) }}" class="glightbox" data-gallery="tour-gallery">
                   <img src="{{ asset($tourImages[0]->image_path) }}" alt="{{ $tour->name }}" />
-                </div>
-                <div class="tour-side-img-item" style="height: 450px;">
+                </a>
+              </div>
+              <div class="tour-side-img-item" style="height: 450px;">
+                <a href="{{ asset($tourImages[1]->image_path) }}" class="glightbox" data-gallery="tour-gallery">
                   <img src="{{ asset($tourImages[1]->image_path) }}" alt="{{ $tour->name }}" />
+                </a>
                 </div>
               </div>
+              </div>
+              
+              <!-- Booking Widget next to Image Grid -->
+              <div class="col-lg-4">
+                <div class="tour-booking-widget">
+                  <div class="widget-card d-flex flex-column" style="background: #f8fafc; padding: 35px 30px; margin-top: 20px; margin-right: 20px; margin-left: 15px;">
+                    
+                    <div style="text-align: center; margin-bottom: 12px;">
+                      <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--theme-color);">Adventure Awaits</span>
+                      <h4 style="font-size: 20px; font-weight: 800; color: #1e293b; margin-top: 6px; margin-bottom: 0;">Ready to Explore?</h4>
+                    </div>
+
+                    <a href="{{ url('/enquiry?tour_slug=' . $tour->slug) }}" class="vs-btn w-100 text-center" style="border-radius: 0; padding: 18px 20px; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0, 101, 108, 0.2); transition: all 0.3s ease;">
+                      Book Now <i class="fa-solid fa-arrow-right ms-2"></i>
+                    </a>
+
+                    <ul class="widget-features" style="list-style: none; padding: 0; margin: 0;">
+                      <li style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 101, 108, 0.1); display: flex; align-items: center; justify-content: center; color: var(--theme-color);">
+                          <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <span style="font-size: 14px; color: #334155; font-weight: 500;">Secure Booking</span>
+                      </li>
+                      <li style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 101, 108, 0.1); display: flex; align-items: center; justify-content: center; color: var(--theme-color);">
+                          <i class="fa-solid fa-headset"></i>
+                        </div>
+                        <span style="font-size: 14px; color: #334155; font-weight: 500;">24/7 Customer Support</span>
+                      </li>
+                      <li style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 101, 108, 0.1); display: flex; align-items: center; justify-content: center; color: var(--theme-color);">
+                          <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <span style="font-size: 14px; color: #334155; font-weight: 500;">Instant Confirmation</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
             @else
-              <figure class="destination-single-img d-block" id="main-tour-hero-img" style="margin-bottom: 30px;">
+            <div class="row gy-4">
+              <div class="col-lg-8">
+                <figure class="destination-single-img d-block" id="main-tour-hero-img" style="margin-top: 15px; margin-left: 15px; margin-right: 15px; margin-bottom: 15px;">
+              <a href="{{ $imageCount > 0 ? asset($tourImages->first()->image_path) : asset('assets/img/destination/destination-single-1.png') }}" class="glightbox" data-gallery="tour-gallery">
                 <img
                   src="{{ $imageCount > 0 ? asset($tourImages->first()->image_path) : asset('assets/img/destination/destination-single-1.png') }}"
                   alt="{{ $tour->name }}"
                   class="w-100"
                   style="border-radius: 15px; height: 450px; object-fit: cover;" />
-              </figure>
+              </a>
+            </figure>
+            </div>
+            
+            <!-- Booking Widget next to Image Grid -->
+            <div class="col-lg-4">
+              <div class="tour-booking-widget">
+                <div class="widget-card d-flex flex-column" style="background: #f8fafc; padding: 35px 30px; margin-top: 20px; margin-right: 20px; margin-left: 15px;">
+                  
+                  <div style="text-align: center; margin-bottom: 12px;">
+                    <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--theme-color);">Adventure Awaits</span>
+                    <h4 style="font-size: 20px; font-weight: 800; color: #1e293b; margin-top: 6px; margin-bottom: 0;">Ready to Explore?</h4>
+                  </div>
+
+                  <a href="{{ url('/enquiry?tour_slug=' . $tour->slug) }}" class="vs-btn w-100 text-center" style="border-radius: 0; padding: 18px 20px; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0, 101, 108, 0.2); transition: all 0.3s ease;">
+                    Book Now <i class="fa-solid fa-arrow-right ms-2"></i>
+                  </a>
+
+                  <ul class="widget-features" style="list-style: none; padding: 0; margin: 0;">
+                    <li style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+                      <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 101, 108, 0.1); display: flex; align-items: center; justify-content: center; color: var(--theme-color);">
+                        <i class="fa-solid fa-shield-halved"></i>
+                      </div>
+                      <span style="font-size: 14px; color: #334155; font-weight: 500;">Secure Booking</span>
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+                      <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 101, 108, 0.1); display: flex; align-items: center; justify-content: center; color: var(--theme-color);">
+                        <i class="fa-solid fa-headset"></i>
+                      </div>
+                      <span style="font-size: 14px; color: #334155; font-weight: 500;">24/7 Customer Support</span>
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 12px;">
+                      <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 101, 108, 0.1); display: flex; align-items: center; justify-content: center; color: var(--theme-color);">
+                        <i class="fa-solid fa-bolt"></i>
+                      </div>
+                      <span style="font-size: 14px; color: #334155; font-weight: 500;">Instant Confirmation</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
             @endif
 
-            <div class="destination-single-px">
+            <div class="destination-single-px mt-4" style="margin-left: 15px;">
               <div class="trip-info">
                 @if($tour->category)
                 <div class="trip-info-box">
@@ -580,11 +805,11 @@
                   </div>
                   <h6 class="info-title">
                     @if($tour->duration_days > 0 && $tour->duration_nights > 0)
-                      {{ $tour->duration_days }} {{ \Illuminate\Support\Str::plural('Day', $tour->duration_days) }} / {{ $tour->duration_nights }} {{ \Illuminate\Support\Str::plural('Night', $tour->duration_nights) }}
+                    {{ $tour->duration_days }} {{ \Illuminate\Support\Str::plural('Day', $tour->duration_days) }} / {{ $tour->duration_nights }} {{ \Illuminate\Support\Str::plural('Night', $tour->duration_nights) }}
                     @elseif($tour->duration_days > 0)
-                      {{ $tour->duration_days }} {{ \Illuminate\Support\Str::plural('Day', $tour->duration_days) }}
+                    {{ $tour->duration_days }} {{ \Illuminate\Support\Str::plural('Day', $tour->duration_days) }}
                     @else
-                      {{ $tour->duration_nights }} {{ \Illuminate\Support\Str::plural('Night', $tour->duration_nights) }}
+                    {{ $tour->duration_nights }} {{ \Illuminate\Support\Str::plural('Night', $tour->duration_nights) }}
                     @endif
                   </h6>
                 </div>
@@ -785,7 +1010,9 @@
                   @foreach($tour->images as $index => $image)
                   <div class="col-4 col-sm-3 col-md-2">
                     <div class="gallery-thumb-item rounded-3 overflow-hidden {{ $index == 0 ? 'active' : '' }}" style="cursor: pointer; height: 80px; border: 2px solid {{ $index == 0 ? '#00656c' : 'transparent' }};" onclick="changeMainImage('{{ asset($image->image_path) }}', this)">
-                      <img src="{{ asset($image->image_path) }}" alt="Thumbnail" class="w-100 h-100" style="object-fit: cover;">
+                      <a href="{{ asset($image->image_path) }}" class="glightbox" data-gallery="tour-gallery-tab" style="display: block; width: 100%; height: 100%;">
+                        <img src="{{ asset($image->image_path) }}" alt="Thumbnail" class="w-100 h-100" style="object-fit: cover;">
+                      </a>
                     </div>
                   </div>
                   @endforeach
@@ -821,7 +1048,7 @@
             </div>
             <div class="col-md-9">
               <div class="row g-3">
-                @if($company_setting->company_name)
+                <!-- @if($company_setting->company_name)
                 <div class="col-sm-6 col-lg-3">
                   <div class="d-flex align-items-center p-3 rounded-3" style="background: #f8fafc; border: 1px solid #f1f5f9; height: 100%;">
                     <span class="d-flex align-items-center justify-content-center bg-theme-color text-white rounded-circle me-3" style="width: 40px; height: 40px; min-width: 40px; font-size: 16px;">
@@ -833,10 +1060,10 @@
                     </div>
                   </div>
                 </div>
-                @endif
+                @endif -->
 
                 @if($company_setting->phone)
-                <div class="col-sm-6 col-lg-3">
+                <div class="col-sm-6 col-lg-4">
                   <a href="tel:{{ $company_setting->phone }}" class="d-flex align-items-center p-3 rounded-3 hover-shadow-sm text-decoration-none" style="background: #f8fafc; border: 1px solid #f1f5f9; height: 100%; transition: all 0.2s;">
                     <span class="d-flex align-items-center justify-content-center bg-theme-color text-white rounded-circle me-3" style="width: 40px; height: 40px; min-width: 40px; font-size: 16px;">
                       <i class="fa-solid fa-phone"></i>
@@ -850,7 +1077,7 @@
                 @endif
 
                 @if($company_setting->whatsapp)
-                <div class="col-sm-6 col-lg-3">
+                <div class="col-sm-6 col-lg-4">
                   <a href="https://wa.me/{{ $company_setting->whatsapp }}" target="_blank" class="d-flex align-items-center p-3 rounded-3 hover-shadow-sm text-decoration-none" style="background: #f8fafc; border: 1px solid #f1f5f9; height: 100%; transition: all 0.2s;">
                     <span class="d-flex align-items-center justify-content-center text-white rounded-circle me-3" style="width: 40px; height: 40px; min-width: 40px; font-size: 18px; background-color: #25D366 !important; color: #ffffff !important;">
                       <i class="fa-brands fa-whatsapp"></i>
@@ -864,7 +1091,7 @@
                 @endif
 
                 @if($company_setting->company_email)
-                <div class="col-sm-6 col-lg-3">
+                <div class="col-sm-6 col-lg-4">
                   <a href="mailto:{{ $company_setting->company_email }}" class="d-flex align-items-center p-3 rounded-3 hover-shadow-sm text-decoration-none" style="background: #f8fafc; border: 1px solid #f1f5f9; height: 100%; transition: all 0.2s;">
                     <span class="d-flex align-items-center justify-content-center bg-theme-color text-white rounded-circle me-3" style="width: 40px; height: 40px; min-width: 40px; font-size: 16px;">
                       <i class="fa-solid fa-envelope"></i>
@@ -889,7 +1116,7 @@
 
 <!--================= Related Tours Section start =================-->
 @php
-  $relatedTours = $tour->related_tours_models;
+$relatedTours = $tour->related_tours_models;
 @endphp
 
 @if($relatedTours && $relatedTours->count() > 0)
@@ -913,8 +1140,7 @@
                 src="{{ $rt->images->count() > 0 ? asset($rt->images->first()->image_path) : asset('assets/img/tour-packages/tour-package-3-1.png') }}"
                 alt="{{ $rt->name }}"
                 class="w-100"
-                style="height: 250px; object-fit: cover;"
-              />
+                style="height: 250px; object-fit: cover;" />
             </a>
           </div>
           <div class="tour-package-content p-4">
@@ -933,19 +1159,19 @@
                 </svg>
                 <span>
                   @if($rt->duration_days > 0)
-                    {{ $rt->duration_days }} {{ \Illuminate\Support\Str::plural('Day', $rt->duration_days) }}
+                  {{ $rt->duration_days }} {{ \Illuminate\Support\Str::plural('Day', $rt->duration_days) }}
                   @endif
                   @if($rt->duration_nights > 0)
-                    {{ $rt->duration_days > 0 ? '/' : '' }} {{ $rt->duration_nights }} {{ \Illuminate\Support\Str::plural('Night', $rt->duration_nights) }}
+                  {{ $rt->duration_days > 0 ? '/' : '' }} {{ $rt->duration_nights }} {{ \Illuminate\Support\Str::plural('Night', $rt->duration_nights) }}
                   @endif
                 </span>
               </div>
               <div class="pricing-info fw-medium">
                 @if($rt->discount_price)
-                  <del class="text-muted me-1">${{ number_format($rt->original_price, 0) }}</del>
-                  <h5 class="new-price text-theme-color d-inline-block mb-0">${{ number_format($rt->discount_price, 0) }}</h5>
+                <del class="text-muted me-1">${{ number_format($rt->original_price, 0) }}</del>
+                <h5 class="new-price text-theme-color d-inline-block mb-0">${{ number_format($rt->discount_price, 0) }}</h5>
                 @else
-                  <h5 class="new-price text-theme-color mb-0">${{ number_format($rt->original_price, 0) }}</h5>
+                <h5 class="new-price text-theme-color mb-0">${{ number_format($rt->original_price, 0) }}</h5>
                 @endif
               </div>
             </div>
@@ -1088,6 +1314,13 @@
     const mainImg = document.querySelector('#main-tour-hero-img img');
     if (mainImg) {
       mainImg.src = src;
+      const parentA = mainImg.closest('a.glightbox');
+      if (parentA) {
+        parentA.href = src;
+        if (typeof glightbox !== 'undefined') {
+          glightbox.reload();
+        }
+      }
     }
 
     // Highlight active thumbnail
@@ -1173,6 +1406,15 @@
         this.textContent = isExpandAll ? 'Collapse All' : 'Expand All';
       });
     }
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+<script>
+  let glightbox;
+  document.addEventListener('DOMContentLoaded', function() {
+    glightbox = GLightbox({
+      selector: '.glightbox'
+    });
   });
 </script>
 @endsection

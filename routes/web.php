@@ -58,6 +58,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Tours
     Route::middleware('can:manage_tours')->group(function () {
+        Route::get('/admin/tours/{tour}/seo', [\App\Http\Controllers\Admin\TourController::class, 'editSeo'])->name('tours.seo.edit');
+        Route::put('/admin/tours/{tour}/seo', [\App\Http\Controllers\Admin\TourController::class, 'updateSeo'])->name('tours.seo.update');
         Route::resource('/admin/tours', \App\Http\Controllers\Admin\TourController::class)->except(['show']);
         Route::delete('/admin/tours/image/{id}', [\App\Http\Controllers\Admin\TourController::class, 'deleteImage']);
         Route::patch('/admin/tours/{tour}/toggle-status', [\App\Http\Controllers\Admin\TourController::class, 'toggleStatus'])->name('tours.toggle-status');

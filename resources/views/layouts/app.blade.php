@@ -4,7 +4,34 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="x-ua-compatible" content="ie=edge" />
-  <title>{{ $company_setting->company_name ?? 'Pacific' }} - Travel Agency</title>
+  <title>@yield('meta_title', ($company_setting->company_name ?? 'Pacific') . ' - Travel Agency')</title>
+  
+  @hasSection('meta_description')
+  <meta name="description" content="@yield('meta_description')">
+  @endif
+
+  @hasSection('meta_keywords')
+  <meta name="keywords" content="@yield('meta_keywords')">
+  @endif
+
+  @hasSection('og_title')
+  <meta property="og:title" content="@yield('og_title')">
+  @else
+  <meta property="og:title" content="@yield('meta_title', ($company_setting->company_name ?? 'Pacific') . ' - Travel Agency')">
+  @endif
+
+  @hasSection('og_description')
+  <meta property="og:description" content="@yield('og_description')">
+  @elseif(View::hasSection('meta_description'))
+  <meta property="og:description" content="@yield('meta_description')">
+  @endif
+
+  @hasSection('og_image')
+  <meta property="og:image" content="@yield('og_image')">
+  @elseif(isset($company_setting) && $company_setting->logo_path)
+  <meta property="og:image" content="{{ asset($company_setting->logo_path) }}">
+  @endif
+
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   @if(isset($company_setting) && $company_setting->favicon_path)
   <link rel="icon" href="{{ asset($company_setting->favicon_path) }}" type="image/x-icon">
